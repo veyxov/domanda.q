@@ -25,5 +25,27 @@ namespace App.Controllers
         public async Task<IActionResult> LoginAsync(UserLoginDTO newUser)
         {
         }*/
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterAsync(UserRegisterDTO dto) 
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var newUser = new User() {
+                UserName = dto.Username,
+                Email = dto.Email,
+            };
+
+            var result = await _userManager.CreateAsync(newUser, dto.Password);
+
+            return RedirectToAction("Login", "Auth");
+        }
     }
 }
