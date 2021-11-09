@@ -10,9 +10,5 @@ namespace App.Models
         public Guid Id { get; set; }
 
         public string Text { get; set; }
-
-        // The user that posted this
-        [ForeignKey("Id")]
-        public Guid UserId { get; set; }
     }
 }
