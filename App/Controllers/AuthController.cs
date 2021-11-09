@@ -17,7 +17,6 @@ namespace App.Controllers
         private readonly IWebHostEnvironment _webHostEnv;
         private readonly ILogger<AuthController> _logger;
 
-
         public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
         {
             _logger = logger;
@@ -67,8 +66,9 @@ namespace App.Controllers
                 UserName = dto.Username,
                 Email = dto.Email,
             };
-            newUser.ProfilePicPath = await CreateFile(dto.ProfilePicFile);
 
+            newUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
+            
             _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
@@ -81,14 +81,15 @@ namespace App.Controllers
             return RedirectToAction("Login", "Auth");
         }
 
+#region NonAction 
         // Creates a file with the given file name and current time
         // Returns the path of the saved picture
         [NonAction]
-        public async Task<string> CreateFile(IFormFile file)
+        public async Task<string> CreateFile(string rootPath, IFormFile file)
         {
             if (file == null) return null;
-            
-            var rootPath = _webHostEnv.WebRootPath;
+
+            _logger.Log(LogLevel.Information, rootPath);
 
             // CURDATE_FileName.Extension
             var fileName = $"{DateTime.Now.ToString("yyMMddHHmmssff")}_{file.FileName}";
@@ -100,5 +101,6 @@ namespace App.Controllers
             }
             return fileName;
         }
+#endregion
     }
 }
