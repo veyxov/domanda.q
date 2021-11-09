@@ -28,10 +28,18 @@ namespace App.Controllers
             return View();
         }
 
-        /*[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> LoginAsync(UserLoginDTO newUser)
         {
-        }*/
+            var result = await _signInManager.PasswordSignInAsync(newUser.Username, newUser.Password, false, false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("LoginFail", "Username or password is wrong.");
+                return View(newUser);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
 
         [HttpGet]
         public IActionResult Register()
@@ -52,6 +60,12 @@ namespace App.Controllers
 
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
+            return RedirectToAction("Login", "Auth");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Auth");
         }
     }
