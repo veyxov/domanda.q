@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace App.Models
 {
@@ -13,5 +14,8 @@ namespace App.Models
         public string Password { get; set; }
         [Compare("Password", ErrorMessage = "Passwords don't match")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Profile image")]
+        public IFormFile ProfilePicFile { get; set; }
     }
 }
