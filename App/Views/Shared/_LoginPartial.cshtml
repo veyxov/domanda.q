@@ -6,9 +6,12 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <img src="~/data/images/@UserManager.GetUserAsync(User).Result.ProfilePicPath" class="img-fluid">
 
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
+        <!-- Profile picture -->
+        <img src="~/data/images/@UserManager.GetUserAsync(User).Result.ProfilePicPath" class="img-responsive img-rounded img-thumbnail"
+        style="max-height: 50px; max-width: 50px;">
+
+        <!-- <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a> -->
     </li>
     <li class="nav-item">
         <form  class="form-inline" asp-controller="Auth" asp-action="Logout">
