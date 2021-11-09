@@ -10,6 +10,13 @@ namespace App.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
 
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
+
         public IActionResult Index()
         {
             return View();
