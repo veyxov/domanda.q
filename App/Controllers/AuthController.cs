@@ -2,6 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using App.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace App.Controllers
 {
@@ -9,11 +14,16 @@ namespace App.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly IWebHostEnvironment _webHostEnv;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager)
+
+        public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
         {
+            _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _webHostEnv = webHostEnv;
         }
 
 
@@ -57,7 +67,9 @@ namespace App.Controllers
                 UserName = dto.Username,
                 Email = dto.Email,
             };
+            newUser.ProfilePicPath = await CreateFile(dto.ProfilePicFile);
 
+            _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
             return RedirectToAction("Login", "Auth");
@@ -67,6 +79,26 @@ namespace App.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Auth");
+        }
+
+        // Creates a file with the given file name and current time
+        // Returns the path of the saved picture
+        [NonAction]
+        public async Task<string> CreateFile(IFormFile file)
+        {
+            if (file == null) return null;
+            
+            var rootPath = _webHostEnv.WebRootPath;
+
+            // CURDATE_FileName.Extension
+            var fileName = $"{DateTime.Now.ToString("yyMMddHHmmssff")}_{file.FileName}";
+            var filePath = Path.Combine(rootPath, "data/images", fileName);
+            _logger.Log(LogLevel.Critical, filePath);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            return fileName;
         }
     }
 }
