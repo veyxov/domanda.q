@@ -1,38 +1,30 @@
 @model App.Models.UserLoginDTO
 
-<div class="jumbotron">
-    <div class="card col-md-5">
-        <div class="card-body">
-            <div class="card-content p-2">
-                <div class="text-center">
-                    <img src="">
-                </div>
-                <div class="card-title text-uppercase text-center py-3">Login</div>
-                <form asp-action="Login" asp-controller="Auth" asp-antiforgery="true" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Username" class="sr-only"></label>
-                        <span asp-validation-for="@Model.Username" class="text-danger"></span>
-                        <div class="position-relative has-icon-right">
-                            <input type="text" asp-for="Username" class="form-control input-shadow" autocomplete="username" placeholder="Введите логин" />
-                            <div class="form-control-position">
-                                <i class="fa fa-at"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Username" class="sr-only"></label>
-                        <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                        <div class="position-relative has-icon-right">
-                            <input type="password" asp-for="Password" class="form-control input-shadow" autocomplete="current-password" placeholder="Введите пароль" />
-                            <div class="form-control-position">
-                                <i class="fa fa-user-o"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary btn-block" id="submit-btn">Вход</button> или <a asp-action="Register" asp-controller="Account">Регистрация</a>
-                </form>
-            </div>
+<div class="card bg-light">
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<article class="card-body mx-auto" style="max-width: 400px;">
+	<h4 class="card-title mt-3 text-center">Login</h4>
+
+	<form asp-action="Login" method="post">
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+             </div>
+            <input asp-for="Username" class="form-control">
         </div>
-    </div>
-</div>
+
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+            </div>
+            <input asp-for="Password" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+        </div>
+        <p class="text-center">Don't have an account ?<a href="">Sign In</a> </p>                                                                 
+    </form>
+</article>
