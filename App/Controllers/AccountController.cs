@@ -69,7 +69,9 @@ namespace App.Controllers
 
             newUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
             
-            _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
+            if (dto.ProfilePicFile is not null)
+                _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
+
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
             return RedirectToAction("Login", "Account");

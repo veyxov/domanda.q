@@ -2,15 +2,6 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-@{
-    string userProfilePic;
-    try {
-    userProfilePic = $"~/data/images/{UserManager.GetUserAsync(User).Result.ProfilePicPath}";
-    } catch {
-        userProfilePic = "Default";
-    }
-}
-
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -18,8 +9,7 @@
 
         <!-- Profile picture -->
         <a asp-controller="Account" asp-action="Manage">
-        <h1> Debug: @userProfilePic </h1>
-        <img src="@userProfilePic" class="img-responsive img-rounded img-thumbnail"
+        <img src="~/data/images/@UserManager.GetUserAsync(User).Result.ProfilePicPath"; class="img-responsive img-rounded img-thumbnail"
         style="max-height: 55px; max-width: 55px;">
         </a>
 
