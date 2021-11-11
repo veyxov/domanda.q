@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace App.Controllers
 {
-    public class AuthController : Controller
+    public class AccountController : Controller
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IWebHostEnvironment _webHostEnv;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<AccountController> _logger;
 
-        public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
+        public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
         {
             _logger = logger;
             _signInManager = signInManager;

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using App.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -26,11 +27,14 @@ namespace App.Controllers
             return View(questions);
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Question question)
         {
