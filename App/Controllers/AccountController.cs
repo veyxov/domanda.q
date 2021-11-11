@@ -72,13 +72,13 @@ namespace App.Controllers
             _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
-            return RedirectToAction("Login", "Auth");
+            return RedirectToAction("Login", "Account");
         }
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Auth");
+            return RedirectToAction("Login", "Account");
         }
 
 #region NonAction 

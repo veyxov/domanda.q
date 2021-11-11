@@ -1,9 +1,15 @@
 @model IEnumerable<App.Models.Question>
 
-Hello:
-@foreach (var i in Model)
+@if (Model.Count() >= 1) 
 {
-    <div class="jumbotron">
-    <h1> @Html.Raw(@i.Text) </h1>
-    </div>
+    @foreach (var i in Model)
+    {
+        <div class="jumbotron">
+            <h1> @Html.Raw(@i.Text) </h1>
+        </div>
+    }
+}
+else
+{
+    <h1> No questions ! </h1>
 }
