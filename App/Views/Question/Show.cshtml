@@ -3,8 +3,8 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-2">
-            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i> </button></a>
-            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i> </button></a>
+            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i></a>
+            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i></a>
             <br/>
             @Model.Likes
         </div>
@@ -21,5 +21,30 @@
 
 <!-- Answers -->
 <div class="container">
-    Answers
+@foreach (var i in Model.Answers)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@i.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i></a>
+                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@i.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i></a>
+                <br/>
+                @i.Likes
+            </div>
+            <div class="col-8">
+                <h1> @Html.Raw(@i.Heading) </h1>
+                <h5> Added on: @i.CreationDate by @Model.CurrentUserName</h5>
+                <hr/>
+                <div class="jumbotron">
+                    @Html.Raw(@i.Text)
+                </div>
+            </div>
+        </div>
+    </div>
+}
 </div>
+
+<!-- Your Answer -->
+
+<a asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
+

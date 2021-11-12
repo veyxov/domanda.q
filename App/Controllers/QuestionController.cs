@@ -45,7 +45,8 @@ namespace App.Controllers
                 Heading = question.Heading,
                 CurrentUserName = curUser.UserName,
                 Likes = question.Likes,
-                Text = question.Text
+                Text = question.Text,
+                Answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync()
             };
 
             dto.CurrentUserName = curUser.UserName;
@@ -67,11 +68,29 @@ namespace App.Controllers
             await _db.Questions.AddAsync(
                     new Question() {
                     Id = Guid.NewGuid(),
-                    Heading = question.Heading,
-                    Text = question.Text,
-                    });
+                    Heading = question.Heading, Text = question.Text, });
             await _db.SaveChangesAsync();
 
+            return RedirectToAction("ShowAll", "Question");
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Answer(Guid Id)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost("Question/Answer/{id}")]
+        public async Task<IActionResult> AnswerAsync(string id, Answer answer)
+        {
+            var curAnswer = answer;
+            curAnswer.QuestionId = Guid.Parse(id);
+            curAnswer.Id = Guid.NewGuid();
+            await _db.Answers.AddAsync(curAnswer);
+            await _db.SaveChangesAsync();
             return RedirectToAction("ShowAll", "Question");
         }
     }
