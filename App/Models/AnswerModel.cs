@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Models
 {
-    public class Question
+    public class Answer
     {
         [Key]
         public Guid Id { get; set; }
@@ -14,9 +13,10 @@ namespace App.Models
         public string Heading { get; set; }
         public string Text { get; set; }
 
-        public Question()
+        public Answer()
         {
             CreationDate = DateTime.UtcNow;
         }
+
     }
 }
