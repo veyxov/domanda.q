@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using App.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,10 +22,17 @@ namespace App.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Show()
+        public async Task<IActionResult> ShowAll()
         {
             var questions = await _db.Questions.ToListAsync();
             return View(questions);
+        }
+
+        [HttpGet("Question/Show/{id}")]
+        public async Task<IActionResult> Show(Guid id)
+        {
+            var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
+            return View(question);
         }
 
         [Authorize]
@@ -46,7 +54,7 @@ namespace App.Controllers
                     });
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Show", "Question");
+            return RedirectToAction("ShowAll", "Question");
         }
     }
 }
