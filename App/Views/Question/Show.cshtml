@@ -1,4 +1,4 @@
-@model App.Models.Question
+@model App.Models.QuestionDTO
 
 <div class="container">
     <div class="row">
@@ -10,11 +10,16 @@
         </div>
         <div class="col-8">
             <h1> @Html.Raw(@Model.Heading) </h1>
-            <h5> Added on: @Model.CreationDate </h5>
+            <h5> Added on: @Model.CreationDate by @Model.CurrentUserName</h5>
             <hr/>
             <div class="jumbotron">
                 @Html.Raw(@Model.Text)
             </div>
         </div>
     </div>
+</div>
+
+<!-- Answers -->
+<div class="container">
+    Answers
 </div>

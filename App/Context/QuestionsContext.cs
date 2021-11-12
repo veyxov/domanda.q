@@ -12,6 +12,7 @@ namespace MoviePortal.Context
         }
 
         public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

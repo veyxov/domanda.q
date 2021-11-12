@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using App.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,11 +15,13 @@ namespace App.Controllers
     {
         private readonly QuestionsContext _db;
         private readonly ILogger<QuestionController> _logger;
+        private readonly UserManager<User> _userManager;
 
-        public QuestionController(QuestionsContext db, ILogger<QuestionController> logger)
+        public QuestionController(QuestionsContext db, ILogger<QuestionController> logger, UserManager<User> userManager)
         {
             _db = db;
             _logger = logger;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -32,7 +35,22 @@ namespace App.Controllers
         public async Task<IActionResult> Show(Guid id)
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
-            return View(question);
+
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            _logger.Log(LogLevel.Critical, curUser.UserName);
+            QuestionDTO dto = new QuestionDTO() 
+            {
+                Id = question.Id,
+                CreationDate = DateTime.UtcNow,
+                Heading = question.Heading,
+                CurrentUserName = curUser.UserName,
+                Likes = question.Likes,
+                Text = question.Text
+            };
+
+            dto.CurrentUserName = curUser.UserName;
+
+            return View(dto);
         }
 
         [Authorize]
@@ -50,7 +68,7 @@ namespace App.Controllers
                     new Question() {
                     Id = Guid.NewGuid(),
                     Heading = question.Heading,
-                    Text = question.Text
+                    Text = question.Text,
                     });
             await _db.SaveChangesAsync();
 
