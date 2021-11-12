@@ -1,5 +1,14 @@
-﻿@{
+﻿@model IEnumerable<App.Models.Question>;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <a class="btn btn-primary" asp-controller="Question" asp-action="Create"> Ask a question </a>
+<br/>
+
+@foreach (var i in Model)
+{
+    <a asp-controller="Question" asp-action="Show" asp-route-Id="@i.Id"> @i.Heading </a>
+    <br/>
+}
