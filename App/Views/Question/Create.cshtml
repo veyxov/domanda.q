@@ -1,0 +1,11 @@
+@model App.Models.Question
+<h4 class="card-title mt-3 text-center">Ask a question !</h4>
+
+<form asp-action="Create" method="post">
+    <div class="form-group input-group">
+        <textarea asp-for="Text" class = "form-control"> </textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Ask !</button>
+    </div>
+</form>
