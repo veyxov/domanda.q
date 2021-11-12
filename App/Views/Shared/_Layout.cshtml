@@ -46,7 +46,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-        <script src="../Extensions/tinymce/tinymce.min.js"></script>
+        <script src="~/Extensions/tinymce/tinymce.min.js"></script>
         <script>
             tinymce.init({
             selector:'textarea',
@@ -68,8 +68,8 @@
         });
         </script>
 
-        <link rel="stylesheet" href="../Extensions/hljs/styles/github.min.css">
-        <script src="../Extensions/hljs/highlight.min.js"></script>
+        <link rel="stylesheet" href="~/Extensions/hljs/styles/github.min.css">
+        <script src="~/Extensions/hljs/highlight.min.js"></script>
         <script>hljs.highlightAll();</script>
 
     @await RenderSectionAsync("Scripts", required: false)
