@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Models
 {
@@ -9,7 +8,13 @@ namespace App.Models
         [Key]
         public Guid Id { get; set; }
 
+        public DateTime CreationDate { get; set; }
         public string Heading { get; set; }
         public string Text { get; set; }
+
+        public Question()
+        {
+            CreationDate = DateTime.UtcNow;
+        }
     }
 }
