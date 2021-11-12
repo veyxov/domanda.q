@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace App.Controllers
 {
-    public class AuthController : Controller
+    public class AccountController : Controller
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IWebHostEnvironment _webHostEnv;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<AccountController> _logger;
 
-        public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
+        public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -69,16 +69,18 @@ namespace App.Controllers
 
             newUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
             
-            _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
+            if (dto.ProfilePicFile is not null)
+                _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
+
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
-            return RedirectToAction("Login", "Auth");
+            return RedirectToAction("Login", "Account");
         }
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Auth");
+            return RedirectToAction("Login", "Account");
         }
 
 #region NonAction 

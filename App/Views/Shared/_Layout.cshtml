@@ -45,6 +45,30 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <script src="../Extensions/tinymce/tinymce.min.js"></script>
+        <script>
+            tinymce.init({
+            selector:'textarea',
+            plugins: [
+                'advlist autolink lists link image charmap preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code',
+                'insertdatetime media nonbreaking table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools codesample',
+                'print preview paste importcss searchreplace autolink',
+                'autosave save directionality code visualblocks visualchars fullscreen',
+                'image link media template codesample table charmap hr pagebreak',
+                'nonbreaking anchor toc insertdatetime advlist lists wordcount',
+                'imagetools textpattern noneditable help charmap quickbars emoticons'
+            ],
+            toolbar: 'codesample | bold italic sizeselect fontselect fontsizeselect | hr alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | insertfile undo redo | forecolor backcolor emoticons',
+            fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
+            height: "150",
+            menubar: false
+        });
+        </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
