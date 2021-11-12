@@ -41,7 +41,7 @@ namespace App.Controllers
             QuestionDTO dto = new QuestionDTO() 
             {
                 Id = question.Id,
-                CreationDate = DateTime.UtcNow,
+                CreationDate = question.CreationDate,
                 Heading = question.Heading,
                 CurrentUserName = curUser.UserName,
                 Likes = question.Likes,
