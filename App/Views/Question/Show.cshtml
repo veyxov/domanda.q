@@ -1,10 +1,20 @@
 @model App.Models.Question
 
 <div class="container">
-    <h1> @Html.Raw(@Model.Heading) </h1>
-    <h5> Added on: @Model.CreationDate </h5>
-
-    <div class="jumbotron">
-        @Html.Raw(@Model.Text)
+    <div class="row">
+        <div class="col-sm-2">
+            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i> </button></a>
+            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i> </button></a>
+            <br/>
+            @Model.Likes
+        </div>
+        <div class="col-8">
+            <h1> @Html.Raw(@Model.Heading) </h1>
+            <h5> Added on: @Model.CreationDate </h5>
+            <hr/>
+            <div class="jumbotron">
+                @Html.Raw(@Model.Text)
+            </div>
+        </div>
     </div>
 </div>

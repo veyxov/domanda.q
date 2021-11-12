@@ -8,6 +8,7 @@ namespace App.Models
         [Key]
         public Guid Id { get; set; }
 
+        public int Likes {get; set; } = 0;
         public DateTime CreationDate { get; set; }
         public string Heading { get; set; }
         public string Text { get; set; }
