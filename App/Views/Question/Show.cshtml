@@ -4,8 +4,9 @@
 {
     @foreach (var i in Model)
     {
+        <h1> @Html.Raw(@i.Heading) </h1>
         <div class="jumbotron">
-            <h1> @Html.Raw(@i.Text) </h1>
+            @Html.Raw(@i.Text)
         </div>
     }
 }

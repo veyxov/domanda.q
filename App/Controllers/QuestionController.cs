@@ -41,6 +41,7 @@ namespace App.Controllers
             await _db.Questions.AddAsync(
                     new Question() {
                     Id = Guid.NewGuid(),
+                    Heading = question.Heading,
                     Text = question.Text
                     });
             await _db.SaveChangesAsync();
