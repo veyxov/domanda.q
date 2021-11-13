@@ -13,7 +13,7 @@ namespace App.Models
         public string Heading { get; set; }
         public string Text { get; set; }
 
-        public IEnumerable<Answer> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
 
         public User User { get; set; }
         public string UserId { get; set; }
