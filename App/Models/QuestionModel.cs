@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace App.Models
 {
     public class Question
@@ -17,8 +15,8 @@ namespace App.Models
 
         public IEnumerable<Answer> Answers { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public User User { get; set; }
+        public string UserId { get; set; }
 
         public Question()
         {

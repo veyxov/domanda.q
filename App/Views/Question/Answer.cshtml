@@ -2,8 +2,8 @@
 
 <div class="container">
     <form asp-action="Answer" asp-controller="Question" method="post">
-        <input asp-for="Heading" class="form-control">
-        <input asp-for="Text" class="form-control">
+        <textarea asp-for="Heading" class="form-control"> </textarea>
+        <textarea asp-for="Text" class="form-control"></textarea>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
         </div>

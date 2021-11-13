@@ -36,20 +36,20 @@ namespace App.Controllers
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
 
-            var curUser = await _userManager.GetUserAsync(HttpContext.User);
-            _logger.Log(LogLevel.Critical, curUser.UserName);
             QuestionDTO dto = new QuestionDTO() 
             {
+                User = await _db.Users.FindAsync(question.UserId),
                 Id = question.Id,
                 CreationDate = question.CreationDate,
                 Heading = question.Heading,
-                CurrentUserName = curUser.UserName,
                 Likes = question.Likes,
                 Text = question.Text,
                 Answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync()
             };
 
-            dto.CurrentUserName = curUser.UserName;
+            if (dto.User == null) {
+                throw new  Exception("Not foudn user !");
+            }
 
             return View(dto);
         }
@@ -65,9 +65,12 @@ namespace App.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Question question)
         {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+
             await _db.Questions.AddAsync(
                     new Question() {
                     Id = Guid.NewGuid(),
+                    UserId = curUser.Id,
                     Heading = question.Heading, Text = question.Text, });
             await _db.SaveChangesAsync();
 
@@ -86,9 +89,11 @@ namespace App.Controllers
         [HttpPost("Question/Answer/{id}")]
         public async Task<IActionResult> AnswerAsync(string id, Answer answer)
         {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var curAnswer = answer;
             curAnswer.QuestionId = Guid.Parse(id);
             curAnswer.Id = Guid.NewGuid();
+            curAnswer.UserId = curUser.Id;
             await _db.Answers.AddAsync(curAnswer);
             await _db.SaveChangesAsync();
             return RedirectToAction("ShowAll", "Question");
