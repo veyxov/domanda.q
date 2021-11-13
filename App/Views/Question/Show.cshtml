@@ -19,6 +19,8 @@
     </div>
 </div>
 
+<h1> @Model.Answers.Count() Answers </h1>
+<hr/>
 <!-- Answers -->
 <div class="container">
 @foreach (var i in Model.Answers)
@@ -33,7 +35,7 @@
             </div>
             <div class="col-8">
                 <h1> @Html.Raw(@i.Heading) </h1>
-                <h5> Added on: @i.CreationDate by @Model.CurrentUserName</h5>
+                <h5> Added on: @i.CreationDate by i.User.UserName</h5>
                 <hr/>
                 <div class="jumbotron">
                     @Html.Raw(@i.Text)
@@ -41,10 +43,11 @@
             </div>
         </div>
     </div>
+<hr/>
 }
 </div>
 
 <!-- Your Answer -->
 
-<a asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
+<a class="btn btn-success d-flex justify-content-center" asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
 

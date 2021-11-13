@@ -90,10 +90,16 @@ namespace App.Controllers
         public async Task<IActionResult> AnswerAsync(string id, Answer answer)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (curUser == null) {
+                throw new Exception("Current user not found");
+            }
+
             var curAnswer = answer;
             curAnswer.QuestionId = Guid.Parse(id);
             curAnswer.Id = Guid.NewGuid();
             curAnswer.UserId = curUser.Id;
+            curAnswer.User = curUser;
             await _db.Answers.AddAsync(curAnswer);
             await _db.SaveChangesAsync();
             return RedirectToAction("ShowAll", "Question");

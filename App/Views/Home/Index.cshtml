@@ -1,14 +1,30 @@
 ﻿@model IEnumerable<App.Models.Question>;
+@using System.Linq;
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<a class="btn btn-primary" asp-controller="Question" asp-action="Create"> Ask a question </a>
+<a class="btn btn-primary d-flex justify-content-center" asp-controller="Question" asp-action="Create"> Ask a question </a>
 <br/>
 
 @foreach (var i in Model)
 {
-    <a asp-controller="Question" asp-action="Show" asp-route-Id="@i.Id"> @i.Heading </a>
-    <br/>
+    <hr/>
+        <div class="container">
+            <div class="row">
+                    <div class="col-sm-2">
+                        <span class="d-flex justify-content-center"> @i.Likes <br/> </span>
+                        <span class="d-flex justify-content-center">Votes</span>
+
+                        <span class=""> @i.Answers?.Count<br/> </span>
+                        <span class="">Answers</span>
+                    </div>
+                    <div class="col-8">
+                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@i.Id"> @Html.Raw(@i.Heading) </a>
+                        <br/>
+                    </div>
+            </div>
+        </div>
+    <hr/>
 }
