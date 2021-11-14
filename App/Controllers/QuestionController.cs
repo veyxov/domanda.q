@@ -72,6 +72,7 @@ namespace App.Controllers
 
         [Authorize]
         [HttpPost("Question/Answer/{id}")]
+        //                                    Only Heading and Text are passed
         public async Task<IActionResult> AnswerAsync(string id, Answer answer)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -80,13 +81,21 @@ namespace App.Controllers
                 throw new Exception("Current user not found");
             }
 
-            var curAnswer = answer;
-            curAnswer.QuestionId = Guid.Parse(id);
-            curAnswer.Id = Guid.NewGuid();
-            curAnswer.UserId = curUser.Id;
+            var curAnswer = new Answer()
+            {
+                Id = Guid.NewGuid(),
+                CreationDate = DateTime.UtcNow,
+
+                Heading = answer.Heading,
+                Text = answer.Text,
+
+                UserId = curUser.Id,
+                QuestionId = Guid.Parse(id)
+            };
+
             await _db.Answers.AddAsync(curAnswer);
             await _db.SaveChangesAsync();
-            return RedirectToAction("ShowAll", "Question");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
