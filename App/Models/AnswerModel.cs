@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Models
 {
@@ -13,8 +14,9 @@ namespace App.Models
         public string Heading { get; set; }
         public string Text { get; set; }
 
-        public User User { get; set; }
         public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
 
         public Guid QuestionId { get; set; }
 

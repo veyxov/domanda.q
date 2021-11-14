@@ -32,26 +32,11 @@ namespace App.Controllers
         }
 
         [HttpGet("Question/Show/{id}")]
-        public async Task<IActionResult> Show(Guid id)
+        public IActionResult Show(Guid id)
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
 
-            QuestionDTO dto = new QuestionDTO() 
-            {
-                User = await _db.Users.FindAsync(question.UserId),
-                Id = question.Id,
-                CreationDate = question.CreationDate,
-                Heading = question.Heading,
-                Likes = question.Likes,
-                Text = question.Text,
-                Answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync()
-            };
-
-            if (dto.User == null) {
-                throw new  Exception("Not foudn user !");
-            }
-
-            return View(dto);
+            return View(question);
         }
 
         [Authorize]
@@ -99,7 +84,6 @@ namespace App.Controllers
             curAnswer.QuestionId = Guid.Parse(id);
             curAnswer.Id = Guid.NewGuid();
             curAnswer.UserId = curUser.Id;
-            curAnswer.User = curUser;
             await _db.Answers.AddAsync(curAnswer);
             await _db.SaveChangesAsync();
             return RedirectToAction("ShowAll", "Question");

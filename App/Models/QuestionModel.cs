@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace App.Models
 {
     public class Question
@@ -13,10 +15,11 @@ namespace App.Models
         public string Heading { get; set; }
         public string Text { get; set; }
 
-        public List<Answer> Answers { get; set; }
+        public virtual ICollection<Answer> Answers { get; set; }
 
-        public User User { get; set; }
         public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
 
         public Question()
         {
