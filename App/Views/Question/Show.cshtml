@@ -1,4 +1,4 @@
-@model App.Models.QuestionDTO
+@model App.Models.Question
 
 <div class="container">
     <div class="row">
@@ -35,7 +35,7 @@
             </div>
             <div class="col-8">
                 <h1> @Html.Raw(@i.Heading) </h1>
-                <h5> Added on: @i.CreationDate by i.User.UserName</h5>
+                <h5> Added on: @i.CreationDate by @i.User.UserName</h5>
                 <hr/>
                 <div class="jumbotron">
                     @Html.Raw(@i.Text)
