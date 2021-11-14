@@ -19,7 +19,14 @@
     </div>
 </div>
 
-<h1> @Model.Answers.Count() Answers </h1>
+<h1>
+    @Model.Answers.Count()
+    @if (@Model.Answers.Count() != 1) {
+        <span> Answers </span>
+    } else {
+        <span> Answer </span>
+    }
+</h1>
 <hr/>
 <!-- Answers -->
 <div class="container">
