@@ -25,7 +25,7 @@ namespace App.Controllers
         }
 
         [HttpGet("Question/Show/{id}")]
-        public IActionResult Show(Guid id)
+        public async Task<IActionResult> ShowAsync(Guid id)
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using App.Models;
 using MoviePortal.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace App.Controllers
 {
@@ -15,16 +16,22 @@ namespace App.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly QuestionsContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, QuestionsContext db)
+        public HomeController(ILogger<HomeController> logger, QuestionsContext db, UserManager<User> userManager)
         {
             _logger = logger;
             _db = db;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View(_db.Questions.ToListAsync().Result);
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            ViewBag.CurUserId = curUser.Id;
+            var questions = await _db.Questions.ToListAsync();
+            return View(questions);
         }
 
         public IActionResult Privacy()

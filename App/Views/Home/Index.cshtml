@@ -8,26 +8,31 @@
 <a class="btn btn-primary d-flex justify-content-center" asp-controller="Question" asp-action="Create"> Ask a question </a>
 <br/>
 
-@foreach (var i in Model)
+@foreach (var question in Model)
 {
     <hr/>
         <div class="container">
             <div class="row">
                     <div class="col-sm-2">
-                        <span class="d-flex justify-content-center"> @i.Likes <br/> </span>
+                        <span class="d-flex justify-content-center"> @question.Likes <br/> </span>
                         <span class="d-flex justify-content-center">Votes</span>
 
-                        <span class="">@i.Answers.Count()</span>
-                            @if (@i.Answers.Count() != 1) {
+                        <span class="">@question.Answers.Count()</span>
+                            @if (@question.Answers.Count() != 1) {
                                 <span> Answers </span>
                             } else {
                                 <span> Answer </span>
                             }
                     </div>
                     <div class="col-8">
-                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@i.Id"> @Html.Raw(@i.Heading) </a>
+                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id"> @Html.Raw(@question.Heading) </a>
                         <br/>
                     </div>
+                    <!--Edit-->
+                    @if (question.User.Id == ViewBag.CurUserId)
+                    {
+                        <a class="btn btn-info text-right m-auto"> Edit </a>
+                    }
             </div>
         </div>
     <hr/>
