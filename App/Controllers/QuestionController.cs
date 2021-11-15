@@ -117,13 +117,40 @@ namespace App.Controllers
                 Text = comment.Text,
                 User = curUser,
                 UserId = curUser.Id,
+                QuestionId = Guid.Parse(id)
             };
-
-            curComment.QuestionId = Guid.Parse(id);
 
             await _db.Comments.AddAsync(curComment);
             _db.SaveChanges();
             return RedirectToAction("Show", "Question", new { Id = id });
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult CommentForAns(string questionId)
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost("Question/CommentForAns/{id}")]
+        public async Task<IActionResult> CommentForAnsAsync(string id, Comment comment)
+        {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+
+            var curComment = new Comment()
+            {
+                Id = Guid.NewGuid(),
+                CreationDate = DateTime.UtcNow,
+                Text = comment.Text,
+                User = curUser,
+                UserId = curUser.Id,
+                AnswerId = Guid.Parse(id),
+            };
+
+            await _db.Comments.AddAsync(curComment);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

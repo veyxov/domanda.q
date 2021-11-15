@@ -1,4 +1,5 @@
-@model App.Models.Question
+@model App.Models.Question;
+@using App.Utils;
 
 <div class="container">
     <div class="row">
@@ -10,7 +11,7 @@
         </div>
         <div class="col-8">
             <h1> @Html.Raw(@Model.Heading) </h1>
-            <h5> Added on: @Model.CreationDate by @Model.User.UserName</h5>
+            <h5 class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@Model.CreationDate) by <a>@Model.User.UserName</a></h5>
             <hr/>
             <div class="jumbotron">
                 @Html.Raw(@Model.Text)
@@ -18,23 +19,23 @@
 
         <!--Comments-->
 
-        <div class="comments">
+        <div class="container-fluid">
             <hr/>
             @foreach (var comment in Model.Comments) 
             {
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-8" style="word-wrap: break-word;">
                         @Html.Raw(@comment.Text)
                     </div>
                     <div class="col-sm-2">
                         <span class="text-primary">@comment.User.UserName</span>
-                        <span class="d-inline-block text-truncate text-muted">@comment.CreationDate</span>
+                        <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                     </div>
                 </div>
+                <hr/>
             }
-            <hr/>
         </div>
-        <a class="btn btn-primary" asp-action="Comment" asp-route-Id="@Model.Id">Comment</a>
+        <a class="btn btn-primary btn-block" asp-action="Comment" asp-route-Id="@Model.Id">Comment</a>
 
         </div>
     </div>
@@ -63,7 +64,8 @@
             </div>
             <div class="col-8">
                 <h1> @Html.Raw(@answer.Heading) </h1>
-                <h5> Added on: @answer.CreationDate by @answer.User.UserName</h5>
+                <span class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@answer.CreationDate) by <a>@answer.User.UserName</a></span>
+                <h5></h5>
                 <hr/>
                 <div class="jumbotron">
                     @Html.Raw(@answer.Text)
@@ -74,18 +76,18 @@
                 @foreach (var comment in answer.Comments) 
                 {
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-8 mx-5" style="word-wrap: break-word;">
                             @Html.Raw(@comment.Text)
                         </div>
                         <div class="col-sm-2">
                             <span class="text-primary">@comment.User.UserName</span>
-                            <span class="d-inline-block text-truncate text-muted">@comment.CreationDate</span>
+                            <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                         </div>
                     </div>
+                    <hr/>
                 }
-                <hr/>
                 </div>
-                    <a class="btn btn-primary" asp-action="Comment" asp-route-Id="@answer.Id">Comment</a>
+                    <a class="btn btn-primary btn-block" asp-action="CommentForAns" asp-route-Id="@answer.Id">Comment</a>
                 </div>
             </div>
 
