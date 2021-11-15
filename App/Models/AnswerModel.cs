@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Models
@@ -11,5 +12,7 @@ namespace App.Models
         public virtual Question Question { get; set; }
         // Asker marked this answer as solution
         public bool IsSolution { get; set; } = false;
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

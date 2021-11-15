@@ -3,8 +3,8 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-2">
-            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i></a>
-            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i></a>
+            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
+            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
             <br/>
             @Model.Likes
         </div>
@@ -15,6 +15,27 @@
             <div class="jumbotron">
                 @Html.Raw(@Model.Text)
             </div>
+
+        <!--Comments-->
+
+        <div class="comments">
+            <hr/>
+            @foreach (var comment in Model.Comments) 
+            {
+                <div class="row">
+                    <div class="col-8">
+                        @Html.Raw(@comment.Text)
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="text-primary">@comment.User.UserName</span>
+                        <span class="d-inline-block text-truncate text-muted">@comment.CreationDate</span>
+                    </div>
+                </div>
+            }
+            <hr/>
+        </div>
+        <a class="btn btn-primary" asp-action="Comment" asp-route-Id="@Model.Id">Comment</a>
+
         </div>
     </div>
 </div>
@@ -30,25 +51,44 @@
 <hr/>
 <!-- Answers -->
 <div class="container">
-@foreach (var i in Model.Answers)
+@foreach (var answer in Model.Answers)
 {
     <div class="container">
         <div class="row">
             <div class="col-sm-2">
-                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@i.Id" class="btn btn-primary"><i class="fa fa-thumbs-up">Like</i></a>
-                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@i.Id" class="btn btn-primary"><i class="fa fa-thumbs-down">DisLike</i></a>
+                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
+                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
                 <br/>
-                @i.Likes
+                @answer.Likes
             </div>
             <div class="col-8">
-                <h1> @Html.Raw(@i.Heading) </h1>
-                <h5> Added on: @i.CreationDate by @i.User.UserName</h5>
+                <h1> @Html.Raw(@answer.Heading) </h1>
+                <h5> Added on: @answer.CreationDate by @answer.User.UserName</h5>
                 <hr/>
                 <div class="jumbotron">
-                    @Html.Raw(@i.Text)
+                    @Html.Raw(@answer.Text)
+                </div>
+
+            <div class="comments">
+                <hr/>
+                @foreach (var comment in answer.Comments) 
+                {
+                    <div class="row">
+                        <div class="col-8">
+                            @Html.Raw(@comment.Text)
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="text-primary">@comment.User.UserName</span>
+                            <span class="d-inline-block text-truncate text-muted">@comment.CreationDate</span>
+                        </div>
+                    </div>
+                }
+                <hr/>
+                </div>
+                    <a class="btn btn-primary" asp-action="Comment" asp-route-Id="@answer.Id">Comment</a>
                 </div>
             </div>
-        </div>
+
     </div>
 <hr/>
 }

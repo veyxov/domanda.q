@@ -1,0 +1,10 @@
+@model App.Models.Comment
+
+<div class="container">
+    <form asp-action="Comment" asp-controller="Question" method="post">
+        <textarea asp-for="Text" class="form-control"> </textarea>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Comment !</button>
+        </div>
+    </form>
+</div>
