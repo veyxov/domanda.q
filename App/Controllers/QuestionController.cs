@@ -24,13 +24,6 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ShowAll()
-        {
-            var questions = await _db.Questions.ToListAsync();
-            return View(questions);
-        }
-
         [HttpGet("Question/Show/{id}")]
         public IActionResult Show(Guid id)
         {
@@ -52,14 +45,17 @@ namespace App.Controllers
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            await _db.Questions.AddAsync(
-                    new Question() {
-                    Id = Guid.NewGuid(),
-                    UserId = curUser.Id,
-                    Heading = question.Heading, Text = question.Text, });
+            var curQuestion = new Question() {
+                Id = Guid.NewGuid(),
+                UserId = curUser.Id,
+                Heading = question.Heading,
+                Text = question.Text
+            };
+
+            await _db.Questions.AddAsync(curQuestion);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("ShowAll", "Question");
+            return RedirectToAction("Show", "Question", new { Id = curQuestion.Id });
         }
 
 
