@@ -1,5 +1,9 @@
-﻿@model IEnumerable<App.Models.Question>;
+﻿@using Microsoft.AspNetCore.Identity
 @using System.Linq;
+
+@model IEnumerable<App.Models.Question>;
+@inject UserManager<User> UserManager
+
 
 @{
     ViewData["Title"] = "Home Page";
@@ -8,26 +12,31 @@
 <a class="btn btn-primary d-flex justify-content-center" asp-controller="Question" asp-action="Create"> Ask a question </a>
 <br/>
 
-@foreach (var i in Model)
+@foreach (var question in Model)
 {
     <hr/>
         <div class="container">
             <div class="row">
                     <div class="col-sm-2">
-                        <span class="d-flex justify-content-center"> @i.Likes <br/> </span>
+                        <span class="d-flex justify-content-center"> @question.Likes <br/> </span>
                         <span class="d-flex justify-content-center">Votes</span>
 
-                        <span class="">@i.Answers.Count()</span>
-                            @if (@i.Answers.Count() != 1) {
+                        <span class="">@question.Answers.Count()</span>
+                            @if (@question.Answers.Count() != 1) {
                                 <span> Answers </span>
                             } else {
                                 <span> Answer </span>
                             }
                     </div>
                     <div class="col-8">
-                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@i.Id"> @Html.Raw(@i.Heading) </a>
+                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id"> @Html.Raw(@question.Heading) </a>
                         <br/>
                     </div>
+                    <!--Edit-->
+                    @if (question.User.UserName == User.Identity.Name)
+                    {
+                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-auto">Edit</a>
+                    }
             </div>
         </div>
     <hr/>
