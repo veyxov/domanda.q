@@ -193,8 +193,12 @@ namespace App.Controllers
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var question = await _db.Questions.FindAsync(id);
+
             // Remove dep
+            question.Comments.Clear();
             question.Answers.Clear();
+
+
             _db.Remove(question);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
@@ -205,6 +209,10 @@ namespace App.Controllers
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
+
+            // Remove dep
+            answer.Comments.Clear();
+
             _db.Answers.Remove(answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
