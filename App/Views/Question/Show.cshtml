@@ -7,22 +7,24 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-2">
-            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
-            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
-            <br/>
-            @Model.Likes
+            <div class="btn-group-vertical">
+                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
+                <br/>
+                <span class="ml-3"> @Model.Likes </span>
+                <br/>
+                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
+            </div>
         </div>
-        <div class="col-8">
+        <div class="col">
             <h1> @Html.Raw(@Model.Heading) </h1>
             <h5 class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@Model.CreationDate) by <a>@Model.User.UserName</a></h5>
             @if (Model.User.UserName == User.Identity.Name)
             {
-                <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right">Edit</a>
-
+                <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
                 <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right">Delete</a>
             }
             <hr/>
-            <div class="jumbotron">
+            <div class="jumbotron " style="word-wrap: break-word">
                 @Html.Raw(@Model.Text)
             </div>
 
@@ -50,14 +52,16 @@
     </div>
 </div>
 
-<h1>
-    @Model.Answers.Count()
-    @if (@Model.Answers.Count() != 1) {
-        <span> Answers </span>
-    } else {
-        <span> Answer </span>
-    }
-</h1>
+<div class="m-5">
+    <h1>
+        @Model.Answers.Count()
+        @if (@Model.Answers.Count() != 1) {
+            <span> Answers </span>
+        } else {
+            <span> Answer </span>
+        }
+    </h1>
+</div>
 <hr/>
 <!-- Answers -->
 <div class="container">
@@ -65,19 +69,22 @@
 {
     <div class="container">
         <div class="row">
-            <div class="col-sm-2">
-                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
-                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
-                <br/>
-                @answer.Likes
+            <div class="col-2">
+                <div class="btn-group-vertical">
+                    <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
+                    <br/>
+                    <span class="ml-3"> @Model.Likes </span>
+                    <br/>
+                    <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
+                </div>
             </div>
-            <div class="col-8">
-                <h1> @Html.Raw(@answer.Heading) </h1>
+            <div class="col">
+                <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
                 <span class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@answer.CreationDate) by <a>@answer.User.UserName</a></span>
 
                 @if (answer.User.UserName == User.Identity.Name)
                 {
-                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right">Edit</a>
+                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
 
                     <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
                 }
