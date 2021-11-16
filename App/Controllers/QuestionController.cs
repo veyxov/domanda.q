@@ -169,5 +169,24 @@ namespace App.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        [HttpGet("Question/EditAnswer/{id}")]
+        public async Task<IActionResult> EditAnswerAsync(Guid id)
+        {
+            var answer = await _db.Answers.FindAsync(id);
+            return View(answer);
+        }
+
+        [Authorize]
+        [HttpPost("Question/EditAnswer/{id}")]
+        public async Task<IActionResult> EditAnswerAsync(Guid id, Question question)
+        {
+            var newAnswer = await _db.Answers.FindAsync(id);
+            newAnswer.Heading = question.Heading;
+            newAnswer.Text = question.Text;
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

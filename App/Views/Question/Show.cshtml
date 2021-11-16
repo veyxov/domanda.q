@@ -72,7 +72,12 @@
             <div class="col-8">
                 <h1> @Html.Raw(@answer.Heading) </h1>
                 <span class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@answer.CreationDate) by <a>@answer.User.UserName</a></span>
-                <h5></h5>
+
+                @if (answer.User.UserName == User.Identity.Name)
+                {
+                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right">Edit</a>
+                }
+
                 <hr/>
                 <div class="jumbotron">
                     @Html.Raw(@answer.Text)
