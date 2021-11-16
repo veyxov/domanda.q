@@ -49,7 +49,8 @@ namespace App.Controllers
                 Id = Guid.NewGuid(),
                 UserId = curUser.Id,
                 Heading = question.Heading,
-                Text = question.Text
+                Text = question.Text,
+                CreationDate = DateTime.UtcNow
             };
 
             await _db.Questions.AddAsync(curQuestion);
