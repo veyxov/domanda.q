@@ -49,7 +49,8 @@ namespace App.Controllers
                 Id = Guid.NewGuid(),
                 UserId = curUser.Id,
                 Heading = question.Heading,
-                Text = question.Text
+                Text = question.Text,
+                CreationDate = DateTime.UtcNow
             };
 
             await _db.Questions.AddAsync(curQuestion);
@@ -145,6 +146,45 @@ namespace App.Controllers
             };
 
             await _db.Comments.AddAsync(curComment);
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpGet("Question/Edit/{id}")]
+        public async Task<IActionResult> EditAsync(Guid id)
+        {
+
+            var question = await _db.Questions.FindAsync(id);
+            return View(question);
+        }
+
+        [Authorize]
+        [HttpPost("Question/Edit/{id}")]
+        public async Task<IActionResult> EditPostAsync(Guid id, Question question)
+        {
+            var newQuestion = await _db.Questions.FindAsync(id);
+            newQuestion.Heading = question.Heading;
+            newQuestion.Text = question.Text;
+            _db.SaveChanges();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpGet("Question/EditAnswer/{id}")]
+        public async Task<IActionResult> EditAnswerAsync(Guid id)
+        {
+            var answer = await _db.Answers.FindAsync(id);
+            return View(answer);
+        }
+
+        [Authorize]
+        [HttpPost("Question/EditAnswer/{id}")]
+        public async Task<IActionResult> EditAnswerAsync(Guid id, Question question)
+        {
+            var newAnswer = await _db.Answers.FindAsync(id);
+            newAnswer.Heading = question.Heading;
+            newAnswer.Text = question.Text;
             _db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }

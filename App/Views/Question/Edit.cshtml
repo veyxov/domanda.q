@@ -1,0 +1,16 @@
+@model App.Models.Question
+<h4 class="card-title mt-3 text-center">Edit you question !</h4>
+
+<form asp-action="EditPost" asp-route-Id="@Model.Id" method="post">
+    <div class="form-group input-group">
+        <textarea asp-for="Heading" class = "form-control"> </textarea>
+    </div>
+
+    <div class="form-group input-group">
+        <textarea asp-for="Text" class = "form-control"> </textarea>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-info btn-block"> Edit !</button>
+    </div>
+</form>
