@@ -17,8 +17,7 @@ namespace App.Controllers
         private readonly ILogger<QuestionController> _logger;
         private readonly UserManager<User> _userManager;
 
-        public QuestionController(QuestionsContext db, ILogger<QuestionController> logger, UserManager<User> userManager)
-        {
+        public QuestionController(QuestionsContext db, ILogger<QuestionController> logger, UserManager<User> userManager) {
             _db = db;
             _logger = logger;
             _userManager = userManager;
@@ -188,5 +187,28 @@ namespace App.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        [HttpGet("Question/Delete/{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var question = await _db.Questions.FindAsync(id);
+            // Remove dep
+            question.Answers.Clear();
+            _db.Remove(question);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpGet("Question/DeleteAnswer/{id}")]
+        public async Task<IActionResult> DeleteAnswerAsync(Guid id)
+        {
+            var answer = await _db.Answers.FindAsync(id);
+            _db.Answers.Remove(answer);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }
