@@ -18,6 +18,8 @@
             @if (Model.User.UserName == User.Identity.Name)
             {
                 <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right">Edit</a>
+
+                <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right">Delete</a>
             }
             <hr/>
             <div class="jumbotron">
@@ -76,6 +78,8 @@
                 @if (answer.User.UserName == User.Identity.Name)
                 {
                     <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right">Edit</a>
+
+                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
                 }
 
                 <hr/>

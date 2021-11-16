@@ -36,6 +36,7 @@
                     @if (question.User.UserName == User.Identity.Name)
                     {
                         <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-auto">Edit</a>
+                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right m-auto">Delete</a>
                     }
             </div>
         </div>

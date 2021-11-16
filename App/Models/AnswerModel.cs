@@ -7,7 +7,7 @@ namespace App.Models
     public class Answer : Post
     {
         // The question ID that the answer belongs
-        public Guid QuestionId { get; set; }
+        public Nullable<Guid> QuestionId { get; set; }
         [ForeignKey("QuestionId")]
         public virtual Question Question { get; set; }
         // Asker marked this answer as solution
