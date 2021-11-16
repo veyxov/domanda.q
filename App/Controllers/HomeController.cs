@@ -29,7 +29,12 @@ namespace App.Controllers
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            ViewBag.CurUserId = curUser.Id;
+            try {
+                ViewBag.CurUserId = curUser.Id;
+            } catch {
+                ViewBag.CurUserId = null;
+            }
+
             var questions = await _db.Questions.ToListAsync();
             return View(questions);
         }

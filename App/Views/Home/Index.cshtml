@@ -31,7 +31,7 @@
                     <!--Edit-->
                     @if (question.User.Id == ViewBag.CurUserId)
                     {
-                        <a class="btn btn-info text-right m-auto"> Edit </a>
+                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info text-right m-auto">Edit</a>
                     }
             </div>
         </div>
