@@ -1,5 +1,9 @@
-﻿@model IEnumerable<App.Models.Question>;
+﻿@using Microsoft.AspNetCore.Identity
 @using System.Linq;
+
+@model IEnumerable<App.Models.Question>;
+@inject UserManager<User> UserManager
+
 
 @{
     ViewData["Title"] = "Home Page";
@@ -29,9 +33,9 @@
                         <br/>
                     </div>
                     <!--Edit-->
-                    @if (question.User.Id == ViewBag.CurUserId)
+                    @if (question.User.UserName == User.Identity.Name)
                     {
-                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info text-right m-auto">Edit</a>
+                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-auto">Edit</a>
                     }
             </div>
         </div>
