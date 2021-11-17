@@ -23,11 +23,22 @@
                                 <span class=""> @question.Likes <br/> </span>
                                 <span class="">Votes</span>
                             </div>
-                            <div class="col btn btn-outline-success m-1">
-                                <span class="">@question.Answers.Count()</span>
-                                <br/>
-                                <span class=""> Answers </span>
-                            </div>
+                            @if (@question.IsSolved)
+                            {
+                                <div class="col btn btn-success m-1">
+                                    <span>@question.Answers.Count()</span>
+                                    <br/>
+                                    <span> Answers </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col btn btn-outline-success m-1">
+                                    <span>@question.Answers.Count()</span>
+                                    <br/>
+                                    <span> Answers </span>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="col">
