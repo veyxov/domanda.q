@@ -92,7 +92,7 @@ namespace App.Controllers
 
             await _db.Answers.AddAsync(curAnswer);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Question", new { Id = curAnswer.QuestionId } );
         }
         [Authorize]
         [HttpGet]
@@ -219,6 +219,19 @@ namespace App.Controllers
             _db.Answers.Remove(answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = answer.QuestionId } );
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> MarkSolutionAsync(string id)
+        {
+            var answer = await _db.Answers.FindAsync(Guid.Parse(id));
+            var question = await _db.Questions.FindAsync(answer.QuestionId);
+            answer.IsSolution = true;
+            question.IsSolved = true;
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Show", "Question", new { Id = question.Id } );
         }
     }
 }
