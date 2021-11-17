@@ -29,12 +29,6 @@ namespace App.Controllers
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            try {
-                ViewBag.CurUserId = curUser.Id;
-            } catch {
-                ViewBag.CurUserId = null;
-            }
-
             var questions = await _db.Questions.ToListAsync();
             return View(questions);
         }

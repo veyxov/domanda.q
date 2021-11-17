@@ -23,6 +23,7 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpGet("Question/Show/{id}")]
         public IActionResult Show(Guid id)
         {
@@ -38,7 +39,7 @@ namespace App.Controllers
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Question question)
         {
