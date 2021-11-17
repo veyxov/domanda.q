@@ -10,9 +10,12 @@
             <div class="btn-group-vertical">
                 <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
                 <br/>
-                <span class="ml-3"> @Model.Likes </span>
+                <span class="ml-3">
+                @Model.Likes
+                </span>
                 <br/>
                 <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
+
             </div>
         </div>
         <div class="col">
@@ -81,6 +84,29 @@
                     <br/>
                     <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
                 </div>
+                    <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
+                    @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("moderator")) && !Model.IsSolved)
+                    {
+                        <a class="btn" asp-action="MarkSolution" asp-route-Id="@answer.Id">
+                            <svg class="checkmark" width="36" height="36" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
+                        </a>
+                        <style>
+                            .checkmark {
+                                fill: grey;
+                            }
+                        </style>
+                    }
+                    else if (Model.IsSolved && answer.IsSolution)
+                    {
+                        <a class="btn">
+                            <svg class="checkmark" width="36" height="36" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
+                        </a>
+                        <style>
+                            .checkmark {
+                                fill: green;
+                            }
+                        </style>
+                    }
             </div>
             <div class="col">
                 <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
