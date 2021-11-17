@@ -133,6 +133,7 @@ namespace App.Controllers
         public async Task<IActionResult> CommentForAnsAsync(string id, Comment comment)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            var answer = await _db.Answers.FindAsync(Guid.Parse(id));
 
             var curComment = new Comment()
             {
@@ -141,12 +142,12 @@ namespace App.Controllers
                 Text = comment.Text,
                 User = curUser,
                 UserId = curUser.Id,
-                AnswerId = Guid.Parse(id),
+                AnswerId = answer.Id
             };
 
             await _db.Comments.AddAsync(curComment);
             _db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Question", new { Id = answer.QuestionId } );
         }
 
         [Authorize]
@@ -166,7 +167,8 @@ namespace App.Controllers
             newQuestion.Heading = question.Heading;
             newQuestion.Text = question.Text;
             _db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Show", "Question", new { Id = id } );
         }
 
         [Authorize]
@@ -185,7 +187,7 @@ namespace App.Controllers
             newAnswer.Heading = question.Heading;
             newAnswer.Text = question.Text;
             _db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Question", new { Id = newAnswer.QuestionId } );
         }
 
         [Authorize]
@@ -215,8 +217,7 @@ namespace App.Controllers
 
             _db.Answers.Remove(answer);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Show", "Question", new { Id = answer.QuestionId } );
         }
-
     }
 }
