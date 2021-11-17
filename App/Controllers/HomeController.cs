@@ -25,11 +25,12 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string sortOrder)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
-            var questions = await _db.Questions.ToListAsync();
+            var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
+                : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
             return View(questions);
         }
 
