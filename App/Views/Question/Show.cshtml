@@ -18,10 +18,14 @@
         <div class="col">
             <h1> @Html.Raw(@Model.Heading) </h1>
             <h5 class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@Model.CreationDate) by <a>@Model.User.UserName</a></h5>
-            @if (Model.User.UserName == User.Identity.Name)
+            @if (Model.User.UserName == User.Identity.Name || User.IsInRole("admin"))
             {
                 <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
                 <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right">Delete</a>
+            }
+            else if (User.IsInRole("moderator"))
+            {
+                <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
             }
             <hr/>
             <div class="jumbotron " style="word-wrap: break-word">
