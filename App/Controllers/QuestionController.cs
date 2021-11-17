@@ -38,7 +38,7 @@ namespace App.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Question question)
         {
