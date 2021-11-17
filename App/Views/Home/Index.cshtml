@@ -12,6 +12,15 @@
 <a class="btn btn-primary d-flex justify-content-center" asp-controller="Question" asp-action="Create"> Ask a question </a>
 <br/>
 
+<!--Sort method-->
+
+<div class="row">
+    <div class="btn-group float-right" role="group" aria-label="Basic example">
+      <a asp-action="Index" asp-route-sortOrder="votes" class="btn btn-secondary">Sort by votes</a>
+      <a asp-action="Index" asp-route-sortOrder="answers" class="btn btn-secondary">Sort by answers</a>
+    </div>
+</div>
+
 @foreach (var question in Model)
 {
     <hr/>
