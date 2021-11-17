@@ -212,9 +212,18 @@ namespace App.Controllers
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
+            var question = await _db.Questions.FindAsync(answer.QuestionId);
 
             // Remove dep
             answer.Comments.Clear();
+
+            // If this answer is a solution
+            // We need to unmark the check
+            if (answer.IsSolution)
+            {
+                question.IsSolved = false;
+                answer.IsSolution = false;
+            }
 
             _db.Answers.Remove(answer);
             await _db.SaveChangesAsync();
