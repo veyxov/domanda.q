@@ -28,10 +28,26 @@ namespace App.Controllers
         public async Task<IActionResult> IndexAsync(string sortOrder)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            var roles = await _userManager.GetRolesAsync(curUser);
 
-            var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
-                : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
-            return View(questions);
+            foreach (var i in roles)
+                _logger.Log(LogLevel.Critical, i.ToString());
+
+            // Default home page based on the user role
+            if (User.IsInRole("admin"))
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            else if (User.IsInRole("moderator"))
+            {
+                return RedirectToAction("Index", "Moderator");
+            }
+            else
+            {
+                var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
+                        : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
+                return View(questions);
+            }
         }
 
         public IActionResult Privacy()
