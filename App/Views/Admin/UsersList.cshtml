@@ -1,0 +1,16 @@
+@model IEnumerable<App.Models.User>
+ 
+<h2>Users</h2>
+<div class="display-4">
+<table class="table">
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName <span class="text-muted">(@user.Email)</span></td>
+            <td>
+                <a class="btn btn-lg btn-danger float-right" asp-action="DeleteUser" asp-route-id="@user.Id">Delete User</a>
+            </td>
+        </tr>
+    }
+</table>
+</div>
