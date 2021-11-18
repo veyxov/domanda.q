@@ -40,6 +40,8 @@ namespace App.Controllers
 
         public async Task<IActionResult> DeleteUserAsync(string id)
         {
+
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var user = await _userManager.FindByIdAsync(id);
             var rolesForUser = await _userManager.GetRolesAsync(user);
 
@@ -62,7 +64,9 @@ namespace App.Controllers
             questions.Clear();
             // -----------
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await _signInManager.SignOutAsync();
+
+            if (id == curUser.Id)
+                await _signInManager.SignOutAsync();
 
             using (var transaction = _db.Database.BeginTransaction())
             {
