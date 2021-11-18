@@ -78,11 +78,11 @@
         <div class="row">
             <div class="col-2">
                 <div class="btn-group-vertical">
-                    <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
+                    <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn btn-primary"><i class="fa fa-thumbs-up"></i></a>
                     <br/>
-                    <span class="ml-3"> @Model.Likes </span>
+                    <span class="ml-3"> @answer.Likes </span>
                     <br/>
-                    <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
+                    <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answe.Id" class="btn btn-primary"><i class="fa fa-thumbs-down"></i></a>
                 </div>
                     <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
                     @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("moderator")) && !Model.IsSolved)
