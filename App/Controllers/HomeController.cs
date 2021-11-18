@@ -27,11 +27,16 @@ namespace App.Controllers
 
         public async Task<IActionResult> IndexAsync(string sortOrder)
         {
-            var curUser = await _userManager.GetUserAsync(HttpContext.User);
-            var roles = await _userManager.GetRolesAsync(curUser);
+            try {
+                var curUser = await _userManager.GetUserAsync(HttpContext.User);
+                var roles = await _userManager.GetRolesAsync(curUser);
 
-            foreach (var i in roles)
-                _logger.Log(LogLevel.Critical, i.ToString());
+                foreach (var i in roles)
+                    _logger.Log(LogLevel.Critical, i.ToString());
+            } catch (Exception ex) {
+                _logger.Log(LogLevel.Warning, ex.Message);
+                _logger.Log(LogLevel.Warning, "No user found");
+            }
 
             // Default home page based on the user role
             if (User.IsInRole("admin"))
