@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,7 @@ namespace App.Controllers
             var questions = await _db.Questions.Where(p => p.UserId == user.Id).ToListAsync();
             foreach (var question in questions)
             {
+                _logger.Log(LogLevel.Critical, $"{question.Heading}");
                 var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
                 foreach (var answer in answers)
                 {
@@ -53,9 +56,12 @@ namespace App.Controllers
                 // Remove dep
                 question.Comments.Clear();
                 question.Answers.Clear();
+                _db.Questions.Remove(question);
+                await _db.SaveChangesAsync();
             }
             questions.Clear();
             // -----------
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await _signInManager.SignOutAsync();
 
             using (var transaction = _db.Database.BeginTransaction())
