@@ -25,7 +25,7 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> IndexAsync(string sortOrder)
+        public async Task<IActionResult> IndexAsync()
         {
             try {
                 var curUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -47,12 +47,7 @@ namespace App.Controllers
             {
                 return RedirectToAction("Index", "Moderator");
             }
-            else
-            {
-                var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
-                        : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
-                return View(questions);
-            }
+            return View();
         }
 
         public IActionResult Privacy()

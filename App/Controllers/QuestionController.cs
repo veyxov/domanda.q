@@ -242,5 +242,11 @@ namespace App.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = question.Id } );
         }
+        public async Task<IActionResult> ShowAllAsync(string sortOrder)
+        {
+            var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
+                    : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
+            return View(questions);
+        }
     }
 }
