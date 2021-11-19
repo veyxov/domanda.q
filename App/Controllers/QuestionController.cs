@@ -164,11 +164,14 @@ namespace App.Controllers
         [HttpPost("Question/Edit/{id}")]
         public async Task<IActionResult> EditPostAsync(Guid id, Question question)
         {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            question.Text += $"<small><sub>Edited by {curUser.UserName} on {DateTime.UtcNow}</sub></small>";
+
             var newQuestion = await _db.Questions.FindAsync(id);
             newQuestion.Heading = question.Heading;
             newQuestion.Text = question.Text;
-            _db.SaveChanges();
 
+            _db.SaveChanges();
             return RedirectToAction("Show", "Question", new { Id = id } );
         }
 
@@ -185,6 +188,10 @@ namespace App.Controllers
         public async Task<IActionResult> EditAnswerAsync(Guid id, Question question)
         {
             var newAnswer = await _db.Answers.FindAsync(id);
+
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            question.Text += $"<small><sub>Edited by {curUser.UserName} on {DateTime.UtcNow}</sub></small>";
+
             newAnswer.Heading = question.Heading;
             newAnswer.Text = question.Text;
             _db.SaveChanges();
