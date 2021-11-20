@@ -1,8 +1,12 @@
 @model App.Models.UserRegisterDTO;
-
 <div class="card bg-light">
 
-<div asp-validation-summary="All" class="text-danger"></div>
+<div class="text-center">
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
+</div>
 
 <article class="card-body mx-auto" style="max-width: 400px;">
 	<h4 class="card-title mt-3 text-center">Create Account</h4>
@@ -20,18 +24,6 @@
                 <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
              </div>
             <input asp-for="Email" class="form-control">
-        </div>
-
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fa fa-building"></i> </span>
-            </div>
-            <select class="form-control">
-                <option selected=""> Select job type</option>
-                <option>Designer</option>
-                <option>Manager</option>
-                <option>Accaunting</option>
-            </select>
         </div>
 
         <div class="form-group input-group">
