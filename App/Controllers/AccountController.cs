@@ -41,6 +41,9 @@ namespace App.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAsync(UserLoginDTO newUser)
         {
+            if (!ModelState.IsValid)
+                return View(newUser);
+
             var result = await _signInManager.PasswordSignInAsync(newUser.Username, newUser.Password, false, false);
             if (!result.Succeeded)
             {
