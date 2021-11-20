@@ -5,6 +5,10 @@
 @inject UserManager<User> UserManager
 
 <div class="container">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+    }
     <div class="row">
         <div class="col-sm-2">
             <div class="btn-group-vertical">

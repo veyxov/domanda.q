@@ -3,8 +3,7 @@ using App.Context;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging; using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Controllers
@@ -56,23 +55,20 @@ namespace App.Controllers
                 {
                     var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
                     foreach (var answer in answers) {
-                        answer.Comments.Clear(); // Answer->Comments
-                        _db.Answers.Remove(answer); // Answer
+                        var comments = await _db.Comments.Where(p => p.AnswerId == answer.Id).ToListAsync();
+                        foreach (var comment in comments) {
+                            _db.Comments.Remove(comment);
+                        }
+                        _db.Answers.Remove(answer);
                     }
-                    answers.Clear(); // Answers
 
-                    // Remove dependencies
-                    question.Comments.Clear(); // Question->Comments
-                    question.Answers.Clear();  // Question->Answers
-                    _db.Questions.Remove(question); // Question
-                    await _db.SaveChangesAsync();
+                    var questionComments = await _db.Comments.Where(p => p.QuestionId == question.Id).ToListAsync();
+                    foreach (var comment in questionComments) {
+                        _db.Comments.Remove(comment);
+                    }
+                    _db.Questions.Remove(question);
                 }
-                questions.Clear(); // Questions
 #endregion
-
-                // If you delete yourself, sign out.
-                if (id == curUser.Id)
-                    await _signInManager.SignOutAsync();
 
                 // Remove deleted user from roles.
                 foreach (var item in rolesForUser.ToList())
@@ -81,6 +77,11 @@ namespace App.Controllers
                 }
 
                 await _db.SaveChangesAsync(); // Save changes to the database
+
+                // If you delete yourself, sign out.
+                if (id == curUser.Id)
+                    await _signInManager.SignOutAsync();
+
                 await _userManager.DeleteAsync(user); // Delete user
                 transaction.Commit(); // Commit the transaction
             }

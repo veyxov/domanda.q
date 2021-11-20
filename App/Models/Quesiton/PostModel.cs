@@ -12,7 +12,9 @@ namespace App.Models
         public int Likes { get; set; } = 0;
         public DateTime CreationDate { get; set; }
 
+        [Required]
         public string Heading { get; set; }
+        [Required]
         public string Text { get; set; }
 
         // User that posted the post

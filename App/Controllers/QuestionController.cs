@@ -23,8 +23,8 @@ namespace App.Controllers
             _userManager = userManager;
         }
 
+        // GET: Question/Show/Id
         [AllowAnonymous]
-        [HttpGet("Question/Show/{id}")]
         public IActionResult Show(Guid id)
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
@@ -32,17 +32,18 @@ namespace App.Controllers
             return View(question);
         }
 
+        // GET: Question/Create
         [Authorize]
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
+        // POST: Question/Create
+        // BODY: question
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Question question)
         {
+            if (!ModelState.IsValid) return View(question);
+
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
             var curQuestion = new Question() {
@@ -60,23 +61,20 @@ namespace App.Controllers
         }
 
 
+        // GET: Question/Answer
         [Authorize]
-        [HttpGet]
-        public IActionResult Answer(Guid Id)
-        {
-            return View();
-        }
+        public IActionResult Answer(Guid Id) => View();
 
+        // POST: question/Answer/id
+        // ROUTE: id
+        // BODY: answer
         [Authorize]
-        [HttpPost("Question/Answer/{id}")]
-        //                                    Only Heading and Text are passed
+        [HttpPost]
         public async Task<IActionResult> AnswerAsync(string id, Answer answer)
         {
-            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (!ModelState.IsValid) return View(answer);
 
-            if (curUser == null) {
-                throw new Exception("Current user not found");
-            }
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
             var curAnswer = new Answer()
             {
@@ -94,17 +92,18 @@ namespace App.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = curAnswer.QuestionId } );
         }
+        // GET: Question/Comment
         [Authorize]
-        [HttpGet]
-        public IActionResult Comment(string questionId)
-        {
-            return View();
-        }
+        public IActionResult Comment(string questionId) => View();
 
+        // POST: Question/Comment/id
+        // ROUTE: id
+        // BODY: comment
         [Authorize]
-        [HttpPost("Question/Comment/{id}")]
+        [HttpPost]
         public async Task<IActionResult> CommentAsync(string id, Comment comment)
         {
+            if (!ModelState.IsValid) return View(comment);
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
             var curComment = new Comment()
@@ -122,17 +121,19 @@ namespace App.Controllers
             return RedirectToAction("Show", "Question", new { Id = id });
         }
 
+        // GET: Question/CommentForAns/id
+        // ROUTE: questionId
         [Authorize]
-        [HttpGet]
-        public IActionResult CommentForAns(string questionId)
-        {
-            return View();
-        }
+        public IActionResult CommentForAns(string questionId) => View();
 
+        // POST: Question/CommentForAns/Id
+        // ROUTE: id
+        // BODY: comment
         [Authorize]
-        [HttpPost("Question/CommentForAns/{id}")]
+        [HttpPost]
         public async Task<IActionResult> CommentForAnsAsync(string id, Comment comment)
         {
+            if (!ModelState.IsValid) return View(comment);
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var answer = await _db.Answers.FindAsync(Guid.Parse(id));
 
@@ -151,17 +152,20 @@ namespace App.Controllers
             return RedirectToAction("Show", "Question", new { Id = answer.QuestionId } );
         }
 
+        // GET: Question/Edit/id
+        // ROUTE: id
         [Authorize]
-        [HttpGet("Question/Edit/{id}")]
         public async Task<IActionResult> EditAsync(Guid id)
         {
-
             var question = await _db.Questions.FindAsync(id);
             return View(question);
         }
 
+        // POST: Question/Edit/id
+        // ROUTE: id
+        // BODY: question
         [Authorize]
-        [HttpPost("Question/Edit/{id}")]
+        [HttpPost]
         public async Task<IActionResult> EditPostAsync(Guid id, Question question)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -175,14 +179,17 @@ namespace App.Controllers
             return RedirectToAction("Show", "Question", new { Id = id } );
         }
 
+        // GET: Question/EditAnswer/id
+        // ROUTE: id
         [Authorize]
-        [HttpGet("Question/EditAnswer/{id}")]
         public async Task<IActionResult> EditAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
             return View(answer);
         }
 
+        // POST: Question/EditAnswer/id
+        // ROUTE: id
         [Authorize]
         [HttpPost("Question/EditAnswer/{id}")]
         public async Task<IActionResult> EditAnswerAsync(Guid id, Question question)
@@ -198,8 +205,9 @@ namespace App.Controllers
             return RedirectToAction("Show", "Question", new { Id = newAnswer.QuestionId } );
         }
 
+        // GET: Question/Delete/id
+        // ROUTE: id
         [Authorize]
-        [HttpGet("Question/Delete/{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var question = await _db.Questions.FindAsync(id);
@@ -214,8 +222,9 @@ namespace App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // GET: Question/DeleteAnswer/id
+        // ROUTE: id
         [Authorize]
-        [HttpGet("Question/DeleteAnswer/{id}")]
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
@@ -237,8 +246,9 @@ namespace App.Controllers
             return RedirectToAction("Show", "Question", new { Id = answer.QuestionId } );
         }
 
+        // GET: Question/MarkSolution
+        // ROUTE: id
         [Authorize]
-        [HttpGet]
         public async Task<IActionResult> MarkSolutionAsync(string id)
         {
             var answer = await _db.Answers.FindAsync(Guid.Parse(id));
@@ -249,6 +259,10 @@ namespace App.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = question.Id } );
         }
+
+        // GET: Question/ShowAll
+        // ROUTE: sortOrder
+        [AllowAnonymous]
         public async Task<IActionResult> ShowAllAsync(string sortOrder)
         {
             var questions = await (sortOrder == "votes" ? _db.Questions.OrderByDescending(p => p.Likes).ToListAsync() 
