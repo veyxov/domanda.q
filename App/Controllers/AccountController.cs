@@ -113,19 +113,21 @@ namespace App.Controllers
         {
             if (!ModelState.IsValid)
                 return View(dto);
-            if (dto.ProfilePicFile is null)
-                _logger.Log(LogLevel.Critical, "NOFILE");
 
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
             // UserName
             curUser.UserName = dto.Username;
+
             // Email
             curUser.Email = dto.Email;
-            // Profile Pic
-            curUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
-            // Password
             
+            // Profile Pic
+            if (dto.ProfilePicFile is not null) {
+                curUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
+            }
+
+            // Password
             var token = await _userManager.GeneratePasswordResetTokenAsync(curUser);
             var result = await _userManager.ResetPasswordAsync(curUser, token, dto.Password);
 
