@@ -1,0 +1,40 @@
+@using Microsoft.AspNetCore.Identity
+@model App.Models.UserRegisterDTO;
+@inject UserManager<User> UserManager
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <form asp-action="Manage" method="post" enctype="multipart/form-data">
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                     </div>
+                    <input asp-for="Username" class="form-control">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                     </div>
+                    <input asp-for="Email" class="form-control">
+                </div>
+
+                <div class="form-group input-group">
+                    <input asp-for="ProfilePicFile" type="file" accept="image/*" class="form-control-file">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Change !</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col">
+        <!-- Profile Pic -->
+            <img src="@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath" class="figure-img img-fluid rounded">
+            <figcaption class="figure-caption">Your profile picture</figcaption>
+
+        </div>
+    </div>
+</div>
