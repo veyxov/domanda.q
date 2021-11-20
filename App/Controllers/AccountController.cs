@@ -95,9 +95,33 @@ namespace App.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        public IActionResult Manage()
+        [HttpGet]
+        public async Task<IActionResult> ManageAsync()
         {
-            return View();
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            var dto = new UserRegisterDTO()
+            {
+                Username = curUser.UserName,
+                Email = curUser.Email,
+            };
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageAsync(UserRegisterDTO dto)
+        {
+            if (dto.ProfilePicFile is null)
+                _logger.Log(LogLevel.Critical, "NOFILE");
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            curUser.UserName = dto.Username;
+            curUser.Email = dto.Email;
+            curUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
+
+            if (dto.ProfilePicFile is not null)
+                _logger.Log(LogLevel.Critical, dto.ProfilePicFile.FileName);
+
+            await _userManager.UpdateAsync(curUser);
+            return View(dto);
         }
 
         [HttpGet]
@@ -125,7 +149,7 @@ namespace App.Controllers
             {
                 await file.CopyToAsync(fileStream);
             }
-            return fileName;
+            return $"/data/images/{fileName}";
         }
 #endregion
     }

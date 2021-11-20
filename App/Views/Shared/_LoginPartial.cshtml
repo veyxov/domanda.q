@@ -9,7 +9,7 @@
 
         <!-- Profile picture -->
         <a asp-controller="Account" asp-action="Manage">
-        <img src="~/data/images/@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath"; class="img-responsive img-rounded img-thumbnail"
+        <img src="@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath"; class="img-responsive img-rounded img-thumbnail"
         style="max-height: 55px; max-width: 55px;">
         </a>
 
