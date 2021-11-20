@@ -78,7 +78,15 @@ namespace App.Controllers
 
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
-            return RedirectToAction("Login", "Account");
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("LoginFail", "Username or password is wrong.");
+                return View(dto);
+            }
+            
+            // If everyting is ok, Login in and redirecto to HOME
+            await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout()
