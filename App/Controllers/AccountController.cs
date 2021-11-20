@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using App.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using App.Models;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
@@ -18,7 +18,11 @@ namespace App.Controllers
         private readonly IWebHostEnvironment _webHostEnv;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager, UserManager<User> userManager, IWebHostEnvironment webHostEnv)
+        public AccountController(
+            ILogger<AccountController> logger,
+            SignInManager<User> signInManager,
+            UserManager<User> userManager,
+            IWebHostEnvironment webHostEnv)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -27,55 +31,54 @@ namespace App.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-        
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        // GET: Account
+        public IActionResult Index() => View();
 
+        // GET: Account/Login
+        public IActionResult Login() => View();
+
+        // POST: Account/Login
+        // BODY: UserLoginDTO
         [HttpPost]
         public async Task<IActionResult> LoginAsync(UserLoginDTO newUser)
         {
-            if (!ModelState.IsValid)
-                return View(newUser);
+            if (!ModelState.IsValid) return View(newUser);
 
-            var result = await _signInManager.PasswordSignInAsync(newUser.Username, newUser.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(
+                userName: newUser.Username,
+                password: newUser.Password,
+                isPersistent: false,
+                lockoutOnFailure: false);
+
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("LoginFail", "Username or password is wrong.");
+                ModelState.AddModelError(key: "LoginFail", errorMessage: "Username or password is wrong.");
                 return View(newUser);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home"); // Home/Index
         }
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        // GET: Account/Register
+        public IActionResult Register() => View();
 
+        // POST: Account/Register
+        // BODY: UserRegisterDTO
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(UserRegisterDTO dto) 
         {
-            if (!ModelState.IsValid)
-                return View(dto);
+            if (!ModelState.IsValid) return View(dto);
 
             var newUser = new User() {
                 UserName = dto.Username,
                 Email = dto.Email,
             };
 
-            newUser.ProfilePicPath = await CreateFile(_webHostEnv.WebRootPath, dto.ProfilePicFile);
-            
-            if (dto.ProfilePicFile is not null)
-                _logger.Log(LogLevel.Debug, dto.ProfilePicFile.FileName);
+            // Write the picture to the file system and get the path
+            newUser.ProfilePicPath = await CreateFile(
+                _webHostEnv.WebRootPath, dto.ProfilePicFile);
 
+            // Create new User
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
             if (!result.Succeeded)
@@ -84,20 +87,22 @@ namespace App.Controllers
                 return View(dto);
             }
             
-            // If everyting is ok, Login in and redirecto to HOME
+            // If everyting is ok, Login and redirecto to HOME/INDEX
             await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home"); // Home/Index
         }
 
+        // GET: Account/Logout
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Account"); // Account/Login
         }
 
-        [HttpGet]
+        // GET: Account/Manage
         public async Task<IActionResult> ManageAsync()
         {
+            // Return current user information to the view
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var dto = new UserRegisterDTO()
             {
@@ -108,11 +113,12 @@ namespace App.Controllers
             return View(dto);
         }
 
+        // POST: Account/Manage
+        // BODY: UserRegisterDTO
         [HttpPost]
         public async Task<IActionResult> ManageAsync(UserRegisterDTO dto)
         {
-            if (!ModelState.IsValid)
-                return View(dto);
+            if (!ModelState.IsValid) return View(dto);
 
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -131,19 +137,13 @@ namespace App.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(curUser);
             var result = await _userManager.ResetPasswordAsync(curUser, token, dto.Password);
 
-            if (dto.ProfilePicFile is not null)
-                _logger.Log(LogLevel.Critical, dto.ProfilePicFile.FileName);
-
             await _userManager.UpdateAsync(curUser);
             return View(dto);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult AccessDenied(string returnUrl = null)
-        {
-            return View();
-        }
+        public IActionResult AccessDenied(string returnUrl = null) => View();
 
 #region NonAction 
         // Creates a file with the given file name and current time
@@ -153,12 +153,9 @@ namespace App.Controllers
         {
             if (file == null) return null;
 
-            _logger.Log(LogLevel.Information, rootPath);
-
             // CURDATE_FileName.Extension
             var fileName = $"{DateTime.Now.ToString("yyMMddHHmmssff")}_{file.FileName}";
             var filePath = Path.Combine(rootPath, "data/images", fileName);
-            _logger.Log(LogLevel.Critical, filePath);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);

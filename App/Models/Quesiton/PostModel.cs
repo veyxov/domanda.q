@@ -6,7 +6,6 @@ namespace App.Models
 {
     public class Post
     {
-        // An ID can not be changed after initialization
         [Key]
         public Guid Id { get; init; }
 
