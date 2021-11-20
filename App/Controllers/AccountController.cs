@@ -95,6 +95,11 @@ namespace App.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        public IActionResult Manage()
+        {
+            return View();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult AccessDenied(string returnUrl = null)
