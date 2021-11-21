@@ -1,9 +1,8 @@
 using System;
-using System.Linq;
+using App.Context;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MoviePortal.Context;
 
 namespace App.Controllers
 {
@@ -12,46 +11,41 @@ namespace App.Controllers
         private readonly QuestionsContext _db;
         private readonly ILogger<QuestionController> _logger;
 
-        public LikeController(QuestionsContext db, ILogger<QuestionController> logger)
+        public LikeController(
+            QuestionsContext db,
+            ILogger<QuestionController> logger)
         {
             _db = db;
             _logger = logger;
         }
 
-        public async Task<IActionResult> IncrementAsync(Guid id)
+        /* Adds val to entity.Likes */
+        [NonAction]
+        public async Task<IActionResult> Change(Guid id, int val)
         {
-            try {
-                var question = await _db.Questions.FindAsync(id);
-                // Increment the likes
-                question.Likes += 1;
+            // Find out that the like belongs to question or answer
+            var question = await _db.Questions.FindAsync(id);
+            // ANSWER
+            if ( question == null )
+            {
+                var answer = await _db.Answers.FindAsync(id);
+                answer.Likes += val;
+                await _db.SaveChangesAsync();
+                return RedirectToAction(
+                    "Show", "Question", new { Id = answer.QuestionId });
+            }
+            // QUESTION
+            else
+            {
+                question.Likes += val;
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Show", "Question", new { Id = id });
-            } catch {
-                var question = await _db.Answers.FindAsync(id);
-                // Increment the likes
-                question.Likes += 1;
-                return RedirectToAction("Show", "Question", new { Id = question.QuestionId });
-            } finally {
-                await _db.SaveChangesAsync();
             }
         }
+        // GET: Like/Increment
+        public async Task<IActionResult> IncrementAsync(Guid id, int val) => await Change(id, 1);
 
-        public async Task<IActionResult> DecrementAsync(Guid id)
-        {
-            try {
-                var question = await _db.Questions.FindAsync(id);
-                // Increment the likes
-                question.Likes -= 1;
-                return RedirectToAction("Show", "Question", new { Id = id });
-            } catch {
-                var question = await _db.Answers.FindAsync(id);
-                // Increment the likes
-                question.Likes -= 1;
-                return RedirectToAction("Show", "Question", new { Id = question.QuestionId });
-            }
-            finally {
-                await _db.SaveChangesAsync();
-            }
-        }
+        // GET: Like/Decrement
+        public async Task<IActionResult> DecrementAsync(Guid id, int val) => await Change(id, -1);
     }
 }

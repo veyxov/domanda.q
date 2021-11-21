@@ -6,14 +6,15 @@ namespace App.Models
 {
     public class Post
     {
-        // An ID can not be changed after initialization
         [Key]
         public Guid Id { get; init; }
 
         public int Likes { get; set; } = 0;
         public DateTime CreationDate { get; set; }
 
+        [Required]
         public string Heading { get; set; }
+        [Required]
         public string Text { get; set; }
 
         // User that posted the post

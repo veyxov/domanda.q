@@ -1,14 +1,10 @@
-using System;
+using App.Models;
+using App.Context;
 using System.Linq;
 using System.Threading.Tasks;
-using App.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging; using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using MoviePortal.Context;
 
 namespace App.Controllers
 {
@@ -19,7 +15,11 @@ namespace App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AdminController(ILogger<HomeController> logger, QuestionsContext db, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AdminController(
+            ILogger<HomeController> logger,
+            QuestionsContext db,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _logger = logger;
             _db = db;
@@ -27,60 +27,65 @@ namespace App.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        // GET: Admin/
+        public IActionResult Index() => View();
 
-
+        // GET: Admin/UserList
         public async Task<IActionResult> UsersListAsync()
         {
             return View(await _userManager.Users.ToListAsync());
         }
 
+        // GET: Admin/DeleteUser
+        // ROUTE: id
         public async Task<IActionResult> DeleteUserAsync(string id)
         {
-
+            // User associated data
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var user = await _userManager.FindByIdAsync(id);
             var rolesForUser = await _userManager.GetRolesAsync(user);
 
-            // Clean the entityes before removing
-            var questions = await _db.Questions.Where(p => p.UserId == user.Id).ToListAsync();
-            foreach (var question in questions)
-            {
-                _logger.Log(LogLevel.Critical, $"{question.Heading}");
-                var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
-                foreach (var answer in answers)
-                {
-                    answer.Comments.Clear();
-                }
-                // Remove dep
-                question.Comments.Clear();
-                question.Answers.Clear();
-                _db.Questions.Remove(question);
-                await _db.SaveChangesAsync();
-            }
-            questions.Clear();
-            // -----------
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            if (id == curUser.Id)
-                await _signInManager.SignOutAsync();
-
+            // SQL Transaction
             using (var transaction = _db.Database.BeginTransaction())
             {
+#region Cleanup
+                // Clean the entityes before removing
+                var questions = await _db.Questions.Where(p => p.UserId == user.Id).ToListAsync();
+                foreach (var question in questions)
+                {
+                    var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
+                    foreach (var answer in answers) {
+                        var comments = await _db.Comments.Where(p => p.AnswerId == answer.Id).ToListAsync();
+                        foreach (var comment in comments) {
+                            _db.Comments.Remove(comment);
+                        }
+                        _db.Answers.Remove(answer);
+                    }
+
+                    var questionComments = await _db.Comments.Where(p => p.QuestionId == question.Id).ToListAsync();
+                    foreach (var comment in questionComments) {
+                        _db.Comments.Remove(comment);
+                    }
+                    _db.Questions.Remove(question);
+                }
+#endregion
+
+                // Remove deleted user from roles.
                 foreach (var item in rolesForUser.ToList())
                 {
-                    // item should be the name of the role
                     var result = await _userManager.RemoveFromRoleAsync(user, item);
                 }
 
-                await _db.SaveChangesAsync();
-                await _userManager.DeleteAsync(user);
-                transaction.Commit();
+                await _db.SaveChangesAsync(); // Save changes to the database
+
+                // If you delete yourself, sign out.
+                if (id == curUser.Id)
+                    await _signInManager.SignOutAsync();
+
+                await _userManager.DeleteAsync(user); // Delete user
+                transaction.Commit(); // Commit the transaction
             }
-            return RedirectToAction("UsersList", "Admin");
+            return RedirectToAction("UsersList", "Admin"); // Admin/UserList
         }
     }
 }
