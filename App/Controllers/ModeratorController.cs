@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
+    [Authorize(Roles = "Moderator")]
     public class ModeratorController : Controller
     {
         private readonly QuestionsContext _db;
