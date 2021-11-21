@@ -31,6 +31,17 @@ namespace App
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            /* Identity password settings */
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            });
+
             services.AddIdentity<User, IdentityRole>(option => {
                 option.User.AllowedUserNameCharacters = null;
             })
@@ -82,7 +93,7 @@ namespace App
                 endpoints.MapRazorPages();
             });
 
-            //Seed database
+            // Seed the database
             AppDbInitializer.Seed(app);
             AppDbInitializer.SeedUsersAndRolesAsync(app).Wait();
         }
