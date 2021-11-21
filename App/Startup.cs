@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using App.Data;
 
 namespace App
 {
@@ -80,6 +81,10 @@ namespace App
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            //Seed database
+            AppDbInitializer.Seed(app);
+            AppDbInitializer.SeedUsersAndRolesAsync(app).Wait();
         }
     }
 }
