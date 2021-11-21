@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
@@ -26,6 +27,7 @@ namespace App.Controllers
         }
 
         // GET: Home/Index
+        [AllowAnonymous]
         public async Task<IActionResult> IndexAsync()
         {
             try {
@@ -46,6 +48,7 @@ namespace App.Controllers
         }
 
         // GET: Home/Privacy
+        [AllowAnonymous]
         public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

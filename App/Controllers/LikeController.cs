@@ -3,9 +3,11 @@ using App.Context;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
+    [Authorize]
     public class LikeController : Controller
     {
         private readonly QuestionsContext _db;

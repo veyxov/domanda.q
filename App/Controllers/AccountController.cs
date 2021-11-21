@@ -39,6 +39,7 @@ namespace App.Controllers
 
         // POST: Account/Login
         // BODY: UserLoginDTO
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> LoginAsync(UserLoginDTO newUser)
         {
@@ -60,10 +61,12 @@ namespace App.Controllers
         }
 
         // GET: Account/Register
+        [AllowAnonymous]
         public IActionResult Register() => View();
 
         // POST: Account/Register
         // BODY: UserRegisterDTO
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsync(UserRegisterDTO dto) 
         {
@@ -93,6 +96,7 @@ namespace App.Controllers
         }
 
         // GET: Account/Logout
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -100,6 +104,7 @@ namespace App.Controllers
         }
 
         // GET: Account/Manage
+        [Authorize]
         public async Task<IActionResult> ManageAsync()
         {
             // Return current user information to the view
@@ -115,6 +120,7 @@ namespace App.Controllers
 
         // POST: Account/Manage
         // BODY: UserRegisterDTO
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ManageAsync(UserRegisterDTO dto)
         {
@@ -141,8 +147,8 @@ namespace App.Controllers
             return View(dto);
         }
 
-        [HttpGet]
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult AccessDenied(string returnUrl = null) => View();
 
 #region NonAction 
