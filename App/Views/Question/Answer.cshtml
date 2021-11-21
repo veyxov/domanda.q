@@ -1,11 +1,15 @@
 @model App.Models.Answer
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
 <div class="container">
     <form asp-action="Answer" asp-controller="Question" method="post">
         <textarea asp-for="Heading" class="form-control"> </textarea>
         <textarea asp-for="Text" class="form-control"></textarea>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+            <button type="submit" class="btn btn-primary btn-block">Answer!</button>
         </div>
     </form>
 </div>

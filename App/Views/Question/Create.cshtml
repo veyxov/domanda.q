@@ -1,6 +1,11 @@
 @model App.Models.Question
 <h4 class="card-title mt-3 text-center">Ask a question !</h4>
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
+
 <form asp-action="Create" method="post">
     <div class="form-group input-group">
         <textarea asp-for="Heading" class = "form-control"> </textarea>

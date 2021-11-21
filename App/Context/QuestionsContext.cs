@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MoviePortal.Context
+/* Project Database cotext */
+namespace App.Context
 {
     public class QuestionsContext : IdentityDbContext<User>
     {
-        public QuestionsContext(DbContextOptions options) : base(options)
-        {
-        }
+        public QuestionsContext(DbContextOptions options) : base(options) { }
 
+        // Tables
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -19,6 +19,7 @@ namespace MoviePortal.Context
         {
             base.OnModelCreating(builder);
 
+            // Rename identity tables
             builder.Entity<User>(entity => entity.ToTable("Users"));
             builder.Entity<IdentityRole>(entity => entity.ToTable("Roles"));
             builder.Entity<IdentityUserRole<string>>(entity => entity.ToTable("UserRoles"));

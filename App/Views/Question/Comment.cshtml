@@ -1,5 +1,8 @@
 @model App.Models.Comment
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
 <div class="container">
     <form asp-action="Comment" asp-controller="Question" method="post">
         <textarea asp-for="Text" class="form-control"> </textarea>
