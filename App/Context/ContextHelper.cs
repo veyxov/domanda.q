@@ -1,7 +1,9 @@
+using System;
 using App.Models;
 using System.Linq;
 using App.Context;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,20 +19,13 @@ namespace App.Data
                 var context = serviceScope.ServiceProvider.GetService<QuestionsContext>();
 
                 context.Database.EnsureCreated();
-
-                if (!context.Users.Any())
-                {
-
-                }
             }
-
         }
 
         public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
         {
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
-
                 /* Create roles */
                 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 

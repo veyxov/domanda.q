@@ -37,9 +37,9 @@ namespace App.Controllers
             }
 
             // Default home page based on the user role
-            if (User.IsInRole("admin"))
+            if (User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Admin");
-            else if (User.IsInRole("moderator"))
+            else if (User.IsInRole("Moderator"))
                 return RedirectToAction("Index", "Moderator");
 
             return View();
