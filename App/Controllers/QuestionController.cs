@@ -159,7 +159,15 @@ namespace App.Controllers
         [Authorize]
         public async Task<IActionResult> EditAsync(Guid id)
         {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var question = await _db.Questions.FindAsync(id);
+            if (question == null) return NotFound("Question not found !");
+
+            if (!(await _userManager.IsInRoleAsync(curUser, "Admin")
+                || await _userManager.IsInRoleAsync(curUser, "Moderator")) && 
+                    question.UserId != curUser.Id)
+                return Unauthorized("You are not the poster of this post !");
+
             return View(question);
         }
 
@@ -186,7 +194,16 @@ namespace App.Controllers
         [Authorize]
         public async Task<IActionResult> EditAnswerAsync(Guid id)
         {
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
             var answer = await _db.Answers.FindAsync(id);
+
+            if (answer == null) return NotFound("Answer not found !");
+
+            if (!(await _userManager.IsInRoleAsync(curUser, "Admin")
+                || await _userManager.IsInRoleAsync(curUser, "Moderator")) && 
+                    answer.UserId != curUser.Id)
+                return Unauthorized("You are not the poster of this post !");
+
             return View(answer);
         }
 
