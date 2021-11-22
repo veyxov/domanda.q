@@ -64,6 +64,11 @@ namespace App.Controllers
                         _db.Answers.Remove(answer);
                     }
 
+                    // Liked posts
+                    var likedPosts = await _db.LikedPosts.Where(p => p.UserId == id).ToListAsync();
+                    foreach (var liked in likedPosts)
+                        _db.LikedPosts.Remove(liked);
+
                     var questionComments = await _db.Comments.Where(p => p.QuestionId == question.Id).ToListAsync();
                     foreach (var comment in questionComments) {
                         _db.Comments.Remove(comment);
