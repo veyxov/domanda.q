@@ -27,6 +27,7 @@ namespace App.Controllers
 
         // GET: Moderator/
         public IActionResult Index() => View();
+
         // GET: Moderator/ShowHated
         public async Task<IActionResult> ShowHatedAsync()
         {
