@@ -58,12 +58,12 @@
                         <div class="col-2">
                             <div class="btn-group-vertical justify-content-center">
                                 <!-- Admin Can delete and edit; Moderator can only edit -->
-                                @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("admin")) )
+                                @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
                                 {
                                     <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
                                     <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger">Delete <i class="fas fa-trash"></i></a>
                                 }
-                                else if (User.IsInRole("moderator"))
+                                else if (User.IsInRole("Moderator"))
                                 {
                                     <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
                                 }

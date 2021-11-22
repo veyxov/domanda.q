@@ -46,6 +46,7 @@ namespace App.Controllers
             if ( question == null )
             {
                 var answer = await _db.Answers.FindAsync(id);
+                if (answer == null) return NotFound("Non existing post !");
                 answer.Likes += val;
                 await _db.SaveChangesAsync();
                 return RedirectToAction(
