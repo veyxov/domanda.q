@@ -29,6 +29,8 @@ namespace App.Controllers
         {
             var question = _db.Questions.Where(p => p.Id == id).FirstOrDefault();
 
+            if (question == null) return NotFound("Question not found !");
+
             return View(question);
         }
 
@@ -195,6 +197,7 @@ namespace App.Controllers
         public async Task<IActionResult> EditAnswerAsync(Guid id, Question question)
         {
             var newAnswer = await _db.Answers.FindAsync(id);
+            if (newAnswer == null) return NotFound("Question not found !");
 
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
             question.Text += $"<small><sub>Edited by {curUser.UserName} on {DateTime.UtcNow}</sub></small>";
@@ -211,6 +214,7 @@ namespace App.Controllers
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var question = await _db.Questions.FindAsync(id);
+            if (question == null) return NotFound("Question not found !");
 
             // Remove dep
             question.Comments.Clear();
@@ -228,7 +232,9 @@ namespace App.Controllers
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
+            if (answer == null) return NotFound("Answer not found !");
             var question = await _db.Questions.FindAsync(answer.QuestionId);
+            if (question == null) return NotFound("Question not found !");
 
             // Remove dep
             answer.Comments.Clear();
@@ -252,7 +258,10 @@ namespace App.Controllers
         public async Task<IActionResult> MarkSolutionAsync(string id)
         {
             var answer = await _db.Answers.FindAsync(Guid.Parse(id));
+            if (answer == null) return NotFound("Answer not found !");
             var question = await _db.Questions.FindAsync(answer.QuestionId);
+            if (question == null) return NotFound("Question not found !");
+
             answer.IsSolution = true;
             question.IsSolved = true;
 
