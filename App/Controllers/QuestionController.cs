@@ -219,7 +219,7 @@ namespace App.Controllers
 
             _db.Remove(question);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ShowAll", "Question");
         }
 
         // GET: Question/DeleteAnswer/id
