@@ -12,5 +12,6 @@ namespace App.Models
 
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<LikedPost> LikedPosts { get; set; }
     }
 }
