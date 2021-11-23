@@ -1,3 +1,4 @@
+@using App.Utils
 @using Microsoft.AspNetCore.Identity
 @using System.Linq;
 
@@ -27,32 +28,40 @@
         <div class="container">
             <div class="row">
                     <div class="col-2">
-                        <div class="row">
-                            <div class="col btn btn-outline-warning m-1">
-                                <span class=""> @question.Likes <br/> </span>
-                                <span class="">Votes</span>
-                            </div>
-                            @if (@question.IsSolved)
-                            {
-                                <div class="col btn btn-success m-1">
-                                    <span>@question.Answers.Count()</span>
-                                    <br/>
-                                    <span> Answers </span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="col btn btn-outline-success m-1">
-                                    <span>@question.Answers.Count()</span>
-                                    <br/>
-                                    <span> Answers </span>
-                                </div>
-                            }
+                        <div class="col btn btn-outline-warning m-2 p-4">
+                            <span class="">@question.Likes</span>
+                            <span class="d-none d-md-block">Votes</span>
                         </div>
+                        @if (@question.IsSolved)
+                        {
+                            <div class="col btn btn-success m-2 p-4">
+                                <span>@question.Answers.Count()</span>
+                                <span class="d-none d-md-block"> Answers </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col btn btn-outline-success m-2 p-4">
+                                <span>@question.Answers.Count()</span>
+                                <span class="d-none d-md-block"> Answers </span>
+                            </div>
+                        }
                     </div>
                     <div class="col">
-                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id"> @Html.Raw(@question.Heading) </a>
-                        <br/>
+                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id">@Html.Raw(@question.Heading)</a>
+                        <div class="row">
+                            <div class="col">
+                                Hello this is test
+                            </div>
+
+                            <div class="col-4">
+                                <h5 class="text-muted">Asked @Util.TimeAgo(@question.CreationDate)</h5>
+                                <div class="text-muted small">
+                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@question.UserId"> <img src="@question.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                                    <a class="ml-1">@question.User.UserName</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!--Edit ans Delete -->
                         <div class="col-2">
@@ -60,16 +69,15 @@
                                 <!-- Admin Can delete and edit; Moderator can only edit -->
                                 @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
                                 {
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger">Delete <i class="fas fa-trash"></i></a>
+                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
+                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger"><span class="d-none d-md-block">Delete</span><i class="fas fa-trash"></i></a>
                                 }
                                 else if (User.IsInRole("Moderator"))
                                 {
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
+                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
                                 }
                             </div>
                         </div>
             </div>
         </div>
-    <hr/>
 }

@@ -9,7 +9,7 @@
 
         <!-- Profile picture -->
         <a asp-controller="Account" asp-action="Manage">
-        <img src="@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath"; class="img-responsive img-rounded img-thumbnail"
+        <img src="@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail"
         style="max-height: 55px; max-width: 55px;">
         </a>
 
@@ -32,3 +32,12 @@ else
     </li>
 }
 </ul>
+<style>
+.img-fit {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    overflow: hidden;
+}
+</style>
+

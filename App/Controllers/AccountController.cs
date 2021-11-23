@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using App.Models;
+using System.Linq;
+using App.Context;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -13,17 +15,20 @@ namespace App.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly QuestionsContext _db;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IWebHostEnvironment _webHostEnv;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(
+            QuestionsContext db,
             ILogger<AccountController> logger,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             IWebHostEnvironment webHostEnv)
         {
+            _db = db;
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
@@ -148,8 +153,20 @@ namespace App.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        // GET: Account/AccessDenied
+        // ROUTE: returnURL
         public IActionResult AccessDenied(string returnUrl = null) => View();
+
+        // GET: Account/ShowProfile
+        // ROUTE: id
+        public IActionResult ShowProfile(string id)
+        {
+            var user = _db.Users.Where(p => p.Id == id).FirstOrDefault();
+            if (user == null)
+                return NotFound("User not found");
+
+            return View(user);
+        }
 
 #region NonAction 
         // Creates a file with the given file name and current time
