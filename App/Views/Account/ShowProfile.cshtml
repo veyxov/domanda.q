@@ -1,0 +1,36 @@
+@using Microsoft.AspNetCore.Identity
+@model App.Models.User;
+@inject UserManager<User> UserManager
+
+<div class="container">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+    }
+    <div class="row">
+        <div class="col-8">
+            <form asp-action="Manage" method="post" enctype="multipart/form-data">
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                     </div>
+                    <input asp-for="UserName" class="form-control">
+                </div>
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                     </div>
+                    <input asp-for="Email" class="form-control">
+                </div>
+            </form>
+        </div>
+
+        <div class="col">
+        <!-- Profile Pic -->
+            <img src="@UserManager?.GetUserAsync(User)?.Result?.ProfilePicPath" class="figure-img img-fluid rounded">
+            <figcaption class="figure-caption">Profile picture</figcaption>
+
+        </div>
+    </div>
+</div>
