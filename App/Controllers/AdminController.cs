@@ -3,7 +3,8 @@ using App.Context;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging; using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
@@ -51,46 +52,27 @@ namespace App.Controllers
             using (var transaction = _db.Database.BeginTransaction())
             {
 #region Cleanup
-                // Clean the entityes before removing
-                var questions = await _db.Questions.Where(p => p.UserId == user.Id).ToListAsync();
-                foreach (var question in questions)
-                {
-                    var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
-                    foreach (var answer in answers) {
-                        var comments = await _db.Comments.Where(p => p.AnswerId == answer.Id).ToListAsync();
-                        foreach (var comment in comments) {
-                            _db.Comments.Remove(comment);
-                        }
-                        _db.Answers.Remove(answer);
-                    }
-
-                    // Liked posts
-                    var likedPosts = await _db.LikedPosts.Where(p => p.UserId == id).ToListAsync();
-                    foreach (var liked in likedPosts)
-                        _db.LikedPosts.Remove(liked);
-
-                    var questionComments = await _db.Comments.Where(p => p.QuestionId == question.Id).ToListAsync();
-                    foreach (var comment in questionComments) {
-                        _db.Comments.Remove(comment);
-                    }
-                    _db.Questions.Remove(question);
-                }
-#endregion
+                // Clean liked posts
+                foreach (var liked in user.LikedPosts) _db.LikedPosts.Remove(liked);
+                // Clean questions
+                foreach (var question in user.Questions) _db.Questions.Remove(question);
+                // Clean comments
+                foreach (var comment in user.Comments) _db.Comments.Remove(comment);
+                // Clean answers
+                foreach (var answer in user.Answers) _db.Answers.Remove(answer);
 
                 // Remove deleted user from roles.
                 foreach (var item in rolesForUser.ToList())
-                {
-                    var result = await _userManager.RemoveFromRoleAsync(user, item);
-                }
-
-                await _db.SaveChangesAsync(); // Save changes to the database
+                    await _userManager.RemoveFromRoleAsync(user, item);
+#endregion
 
                 // If you delete yourself, sign out.
                 if (id == curUser.Id)
                     await _signInManager.SignOutAsync();
 
                 await _userManager.DeleteAsync(user); // Delete user
-                transaction.Commit(); // Commit the transaction
+                await _db.SaveChangesAsync(); // Save changes to the database
+                await transaction.CommitAsync(); // Commit the transaction
             }
             return RedirectToAction("UsersList", "Admin"); // Admin/UserList
         }
