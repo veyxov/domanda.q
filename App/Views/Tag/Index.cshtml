@@ -1,0 +1,15 @@
+@model IEnumerable<App.Models.Tag>;
+
+<div class="row">
+@foreach (var tag in Model)
+{
+    <div class="card text-white bg-info m-3" style="max-width: 20rem;">
+      <h2><div class="card-header">@tag.Name</div></h2>
+      <div class="card-body">
+        <p class="card-text">@tag.Description</p>
+      </div>
+    </div>
+}
+</div>
+<a class="btn btn-primary" asp-action="Create">Create tag</a>
+
