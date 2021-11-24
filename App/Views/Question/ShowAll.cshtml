@@ -62,6 +62,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row m-2 small">
+                            @foreach (var tag in question.Tags)
+                            {
+                                <a asp-controller="Tag" asp-action="Index" class="border border-primary rounded bg-primary text-white m-1 p-2">
+                                    @tag.Name
+                                </a>
+                            }
+                        </div>
                     </div>
                     <!--Edit ans Delete -->
                         <div class="col-2">
