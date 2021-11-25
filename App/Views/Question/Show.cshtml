@@ -26,9 +26,6 @@
             <h1> @Html.Raw(@Model.Heading) </h1>
             <div class="row">
                 <div class="col">
-                    <h5 class="text-truncate text-muted">Added @Util.TimeAgo(@Model.CreationDate) by <a>@Model.User.UserName</a></h5>
-                </div>
-                <div class="col">
                     @if (Model.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
                     {
                         <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1">Edit</a>
@@ -50,15 +47,28 @@
         <!-- Comments -->
 
         <div class="row">
-            <small class="ml-4">Tags: </small>
-            @foreach (var tag in Model.Tags)
-            {
-                <span class="small">
-                    <a asp-controller="Tag" asp-action="Index" class="border border-primary rounded bg-primary text-white m-1 p-1">
-                        @tag.Name
-                    </a>
-                </span>
-            }
+            <div class="col">
+            </div>
+            <div class="col-4">
+                <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <small class="ml-4">Tags: </small>
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="small">
+                        <a asp-controller="Tag" asp-action="Index" class="border border-primary rounded bg-primary text-white m-1 p-1">
+                            @tag.Name
+                        </a>
+                    </span>
+                }
+            </div>
+            <div class="col-4">
+                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id"> <img src="@Model.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id">@Model.User.UserName</a>
+            </div>
         </div>
 
         <div class="container-fluid">
