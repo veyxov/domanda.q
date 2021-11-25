@@ -246,7 +246,7 @@ namespace App.Controllers
 
         // GET: Question/DeleteAnswer/id
         // ROUTE: id
-        [Authorize]
+        [Authorize(Roles = "Admin, Moderator")]
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
