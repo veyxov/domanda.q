@@ -236,6 +236,7 @@ namespace App.Controllers
             // Remove dep
             question.Comments.Clear();
             question.Answers.Clear();
+            question.Tags.Clear();
 
 
             _db.Remove(question);

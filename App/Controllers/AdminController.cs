@@ -54,6 +54,9 @@ namespace App.Controllers
 #region Cleanup
                 var questions = await _db.Questions.Where(p => p.UserId == id).ToListAsync();
                 foreach (var question in questions) {
+                    var qcomments = _db.Comments.Where(p => p.QuestionId == question.Id).ToList();
+                    foreach (var comment in qcomments)
+                        _db.Comments.Remove(comment);
                     var answers = await _db.Answers.Where(p => p.QuestionId == question.Id).ToListAsync();
                     foreach (var answer in answers) {
                         var comments = await _db.Comments.Where(p => p.AnswerId == answer.Id).ToListAsync();
