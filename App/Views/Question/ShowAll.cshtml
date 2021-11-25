@@ -51,7 +51,7 @@
                         <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id">@Html.Raw(@question.Heading)</a>
                         <div class="row">
                             <div class="col">
-                                Hello this is test
+                                <small class="text-muted"> @Html.Raw(@question.Text) </small>
                             </div>
 
                             <div class="col-4">
