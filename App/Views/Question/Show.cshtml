@@ -79,6 +79,7 @@
                     <div class="col-8" style="word-wrap: break-word;">
                         @Html.Raw(@comment.Text)
                     </div>
+
                     <div class="col-sm-2">
                         <span class="text-primary">@comment.User.UserName</span>
                         <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
@@ -146,7 +147,6 @@
             </div>
             <div class="col">
                 <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
-                <span class="d-inline-block text-truncate text-muted">Added @Util.TimeAgo(@answer.CreationDate) by <a>@answer.User.UserName</a></span>
 
                 @if (answer.User.UserName == User.Identity.Name)
                 {
@@ -159,6 +159,16 @@
                 <div class="jumbotron">
                     @Html.Raw(@answer.Text)
                 </div>
+                <div class="row">
+                        <div class="col"></div>
+                        <div class="col-4">
+                            <small class="text-muted">Answered @Util.TimeAgo(@answer.CreationDate)</small>
+                            <div class="text-muted small">
+                                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId"> <img src="@answer.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId" class="ml-1">@answer.User.UserName</a>
+                            </div>
+                        </div>
+                </div>
 
             <div class="comments">
                 <hr/>
@@ -169,7 +179,7 @@
                             @Html.Raw(@comment.Text)
                         </div>
                         <div class="col-sm-2">
-                            <span class="text-primary">@comment.User.UserName</span>
+                            <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@comment.UserId" class="text-primary">@comment.User.UserName</a>
                             <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                         </div>
                     </div>
