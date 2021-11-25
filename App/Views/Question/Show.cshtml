@@ -122,7 +122,7 @@
                     <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
                 </div>
                     <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
-                    @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("Moderator")) && !Model.IsSolved)
+                    @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("Moderator") || User.IsInRole("Admin")) && !Model.IsSolved)
                     {
                         <a class="btn" asp-action="MarkSolution" asp-route-Id="@answer.Id">
                             <svg class="checkmark" width="50" height="50" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
@@ -148,12 +148,19 @@
             <div class="col">
                 <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
 
-                @if (answer.User.UserName == User.Identity.Name)
-                {
-                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
-
-                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
-                }
+                <div class="row">
+                    <div class="col"></div>
+                        <div class="col-4">
+                            @if (User.IsInRole("Moderator") || answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                            {
+                                <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
+                                @if (answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                                {
+                                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
+                                }
+                            }
+                        </div>
+                </div>
 
                 <hr/>
                 <div class="jumbotron">
