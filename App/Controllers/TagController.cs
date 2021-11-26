@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
@@ -30,6 +31,7 @@ namespace App.Controllers
         }
 
         // GET: Tag/Create
+        [Authorize]
         public IActionResult CreateAsync()
         {
             return View();
@@ -37,6 +39,7 @@ namespace App.Controllers
         // POST: Tag/Create
         // BODY: App.Models.Tag
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateAsync(Tag tag)
         {
             if (!ModelState.IsValid)
@@ -48,10 +51,12 @@ namespace App.Controllers
         }
 
         // GET: Tag/AddTagToQuestion
+        [Authorize]
         public IActionResult AddTagToQuestion(string id) => View();
 
         // POST: Tag/AddTagToQuestion
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddTagToQuestion(string id, Tag tag)
         {
             var curUser = await _userManager.GetUserAsync(HttpContext.User);
