@@ -94,7 +94,8 @@ namespace App.Controllers
                 ModelState.AddModelError("LoginFail", "Username or password is wrong.");
                 return View(dto);
             }
-            
+            // Default role for User
+            await _userManager.AddToRoleAsync(newUser, "User");
             // If everyting is ok, Login and redirecto to HOME/INDEX
             await _signInManager.PasswordSignInAsync(dto.Username, dto.Password, false, false);
             return RedirectToAction("Index", "Home"); // Home/Index

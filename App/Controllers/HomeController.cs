@@ -43,6 +43,8 @@ namespace App.Controllers
                 return RedirectToAction("Index", "Admin");
             else if (User.IsInRole("Moderator"))
                 return RedirectToAction("Index", "Moderator");
+            else if (User.IsInRole("User"))
+                return RedirectToAction("ShowAll", "Question");
 
             return View();
         }
