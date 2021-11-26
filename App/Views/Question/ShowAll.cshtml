@@ -1,5 +1,6 @@
 @using App.Utils
 @using Microsoft.AspNetCore.Identity
+@using System.Text.RegularExpressions;
 @using System.Linq;
 
 @model IEnumerable<App.Models.Question>;
@@ -51,7 +52,9 @@
                         <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id">@Html.Raw(@question.Heading)</a>
                         <div class="row">
                             <div class="col">
-                                <small class="text-muted"> @Html.Raw(@question.Text) </small>
+                                <small class="text-muted">
+                                    @Regex.Replace(question.Text, @"<[^>]+>", "")
+                                </small>
                             </div>
 
                             <div class="col-4">
