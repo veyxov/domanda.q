@@ -21,7 +21,15 @@
                             <a class="nav-link text-dark" asp-controller="Question" asp-action="ShowAll">Questions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Tag" asp-action="Index">Tags</a>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Tags
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" asp-controller="Tag" asp-action="Index">Show tags</a>
+                                    <a class="dropdown-item" asp-controller="Tag" asp-action="Create">Create tag</a>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

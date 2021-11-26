@@ -3,12 +3,14 @@
 <div class="row">
 @foreach (var tag in Model)
 {
-    <div class="card text-white bg-info m-3" style="max-width: 20rem;">
-      <h2><div class="card-header">@tag.Name</div></h2>
-      <div class="card-body">
-        <p class="card-text">@tag.Description</p>
-      </div>
-    </div>
+    <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn">
+        <div class="card text-white bg-info" style="max-width: 20rem;">
+          <h2><div class="card-header">@tag.Name</div></h2>
+          <div class="card-body">
+            <p class="card-text">@tag.Description</p>
+          </div>
+        </div>
+    </a>
 }
 </div>
 <a class="btn btn-primary" asp-action="Create">Create tag</a>

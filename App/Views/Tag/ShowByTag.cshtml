@@ -11,17 +11,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<a class="btn btn-primary d-flex justify-content-center" asp-controller="Question" asp-action="Create"> Ask a question </a>
-<br/>
-
 <!--Sort method-->
-
-<div class="d-flex justify-content-end">
-    <div class="btn-group float-right" role="group" aria-label="Basic example">
-      <a asp-action="ShowAll" asp-route-sortOrder="votes" class="btn btn-outline-secondary">Sort by votes</a>
-      <a asp-action="ShowAll" asp-route-sortOrder="answers" class="btn btn-outline-secondary">Sort by answers</a>
-    </div>
-</div>
 
 @foreach (var question in Model)
 {
@@ -68,7 +58,7 @@
                         <div class="row m-2 small">
                             @foreach (var tag in question.Tags)
                             {
-                                <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white m-1 p-1">
+                                <a asp-controller="Tag" asp-action="Index" class="btn border border-primary rounded bg-primary text-white m-1 p-1">
                                     @tag.Name
                                 </a>
                             }

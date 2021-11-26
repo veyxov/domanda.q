@@ -11,8 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
-    public class TagController : Controller
-    {
+    public class TagController : Controller {
         private readonly QuestionsContext _db;
         private readonly ILogger<QuestionController> _logger;
         private readonly UserManager<User> _userManager;
@@ -83,5 +82,14 @@ namespace App.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = id } );
         }
+        // GET: Tag/ShowByTag
+        // Route: tagName
+        [AllowAnonymous]
+        public async Task<IActionResult> ShowByTagAsync(string tagName)
+        {
+            var questions = await _db.Questions.Where(p => p.Tags.Any(t => t.Name == tagName)).ToListAsync();
+            return View(questions);
+        }
     }
+
 }
