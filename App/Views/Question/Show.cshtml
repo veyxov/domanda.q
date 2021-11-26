@@ -47,8 +47,7 @@
         <!-- Comments -->
 
         <div class="row">
-            <div class="col">
-            </div>
+            <div class="col"> </div>
             <div class="col-4">
                 <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
             </div>
@@ -59,7 +58,7 @@
                 @foreach (var tag in Model.Tags)
                 {
                     <span class="small">
-                        <a asp-controller="Tag" asp-action="Index" class="border border-primary rounded bg-primary text-white m-1 p-1">
+                        <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white mx-1 p-1">
                             @tag.Name
                         </a>
                     </span>
@@ -149,8 +148,7 @@
                 <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
 
                 <div class="row">
-                    <div class="col"></div>
-                        <div class="col-4">
+                        <div class="col">
                             @if (User.IsInRole("Moderator") || answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
                             {
                                 <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
