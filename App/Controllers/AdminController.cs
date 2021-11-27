@@ -69,17 +69,16 @@ namespace App.Controllers
                 }
 
                 // Clean comments
-                foreach (var comment in user.Comments) _db.Comments.Remove(comment);
+                _db.Comments.RemoveRange(user.Comments);
                 // Clean liked posts
-                foreach (var liked in user.LikedPosts) _db.LikedPosts.Remove(liked);
+                _db.LikedPosts.RemoveRange(user.LikedPosts);
                 // Clean answers
-                foreach (var answer in user.Answers) _db.Answers.Remove(answer);
+                _db.Answers.RemoveRange(user.Answers);
                 // Clean questions
                 foreach (var question in user.Questions) {
-                    foreach (var tag in question.Tags)
-                        _db.Tags.Remove(tag);
-                    _db.Questions.Remove(question);
+                    _db.Tags.RemoveRange(question.Tags);
                 }
+                _db.Questions.RemoveRange(user.Questions);
 
                 // Remove deleted user from roles.
                 foreach (var item in rolesForUser.ToList())
