@@ -169,6 +169,16 @@ namespace App.Controllers
             return View(user);
         }
 
+        [Authorize]
+        // GET: Account/ShowLiked/{id}
+        // Route: Id
+        public async Task<IActionResult> ShowLikedAsync(string id)
+        {
+            var curUser = await _userManager.FindByIdAsync(id);
+
+            var questions = curUser.LikedPosts.Select(p => p.Post).ToList();
+            return View(questions);
+        }
 #region NonAction 
         // Creates a file with the given file name and current time
         // Returns the path of the saved picture
