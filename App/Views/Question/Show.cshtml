@@ -4,203 +4,204 @@
 @using App.Utils;
 @inject UserManager<User> UserManager
 
-<div class="container">
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div asp-validation-summary="All" class="alert alert-danger"></div>
-    }
-    <div class="row">
-        <div class="col-sm-2">
-            <div class="btn-group-vertical">
-            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
-            <br/>
-            <div class="d-flex justify-content-center btn">
-                <span class="font-weight-bold">@Model.Likes</span>
-            </div>
-            <br/>
-            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
+<body class="bg-light">
+    <div class="container">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div asp-validation-summary="All" class="alert alert-danger"></div>
+        }
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="btn-group-vertical">
+                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
+                <br/>
+                <div class="d-flex justify-content-center btn">
+                    <span class="font-weight-bold">@Model.Likes</span>
+                </div>
+                <br/>
+                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
 
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <h1> @Html.Raw(@Model.Heading) </h1>
+            <div class="col">
+                <h1> @Html.Raw(@Model.Heading) </h1>
+                <div class="row">
+                    <div class="col">
+                        @if (Model.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                        {
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1">Edit</a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right m-1">Delete</a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right m-1">Add tags</a>
+                        }
+                        else if (User.IsInRole("Moderator"))
+                        {
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right mr-2">Add tags</a>
+                        }
+                    </div>
+                </div>
+                <hr/>
+                <div class="jumbotron" style="word-wrap: break-word; max-width: 55rem;" >
+                    @Html.Raw(@Model.Text)
+                </div>
+
+            <!-- Comments -->
+
+            <div class="row">
+                <div class="col"> </div>
+                <div class="col-4">
+                    <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
-                    @if (Model.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                    <small class="ml-4">Tags: </small>
+                    @foreach (var tag in Model.Tags)
                     {
-                        <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1">Edit</a>
-                        <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right m-1">Delete</a>
-                        <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right m-1">Add tags</a>
-                    }
-                    else if (User.IsInRole("Moderator"))
-                    {
-                        <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
-                        <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right mr-2">Add tags</a>
+                        <span class="small">
+                            <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white mx-1 p-1">
+                                @tag.Name
+                            </a>
+                        </span>
                     }
                 </div>
-            </div>
-            <hr/>
-            <div class="jumbotron " style="word-wrap: break-word">
-                @Html.Raw(@Model.Text)
+                <div class="col-4">
+                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id"> <img src="@Model.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id">@Model.User.UserName</a>
+                </div>
             </div>
 
-        <!-- Comments -->
-
-        <div class="row">
-            <div class="col"> </div>
-            <div class="col-4">
-                <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <small class="ml-4">Tags: </small>
-                @foreach (var tag in Model.Tags)
+            <div class="container-fluid">
+                <hr/>
+                @foreach (var comment in Model.Comments) 
                 {
-                    <span class="small">
-                        <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white mx-1 p-1">
-                            @tag.Name
-                        </a>
-                    </span>
-                }
-            </div>
-            <div class="col-4">
-                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id"> <img src="@Model.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
-                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id">@Model.User.UserName</a>
-            </div>
-        </div>
+                    <div class="my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
+                        <div class="row">
+                            <div class="col-8" style="word-wrap: break-word;">
+                                @Html.Raw(@comment.Text)
+                            </div>
 
-        <div class="container-fluid">
-            <hr/>
-            @foreach (var comment in Model.Comments) 
-            {
-                <div class="row">
-                    <div class="col-8" style="word-wrap: break-word;">
-                        @Html.Raw(@comment.Text)
-                    </div>
-
-                    <div class="col-sm-2">
-                        <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id" class="text-primary">@comment.User.UserName</a>
-                        <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
-                    </div>
-                </div>
-                <hr/>
-            }
-        </div>
-        <a class="btn btn-primary btn-block" asp-action="Comment" asp-route-Id="@Model.Id">Comment</a>
-
-        </div>
-    </div>
-</div>
-
-<div class="m-5">
-    <h1>
-        @Model.Answers.Count()
-        @if (@Model.Answers.Count() != 1) {
-            <span> Answers </span>
-        } else {
-            <span> Answer </span>
-        }
-    </h1>
-</div>
-<hr/>
-<!-- Answers -->
-<div class="container">
-@foreach (var answer in Model.Answers)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-2">
-                <div class="btn-group-vertical">
-                    <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
-                    <br/>
-                    <div class="d-flex justify-content-center btn">
-                        <span class="font-weight-bold">@answer.Likes</span>
-                    </div>
-                    <br/>
-                    <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
-                </div>
-                    <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
-                    @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("Moderator") || User.IsInRole("Admin")) && !Model.IsSolved)
-                    {
-                        <a class="btn" asp-action="MarkSolution" asp-route-Id="@answer.Id">
-                            <svg class="checkmark" width="50" height="50" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
-                        </a>
-                        <style>
-                            .checkmark {
-                                fill: grey;
-                            }
-                        </style>
-                    }
-                    else if (Model.IsSolved && answer.IsSolution)
-                    {
-                        <a class="btn">
-                            <svg class="checkmark" width="50" height="50" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
-                        </a>
-                        <style>
-                            .checkmark {
-                                fill: green;
-                            }
-                        </style>
-                    }
-            </div>
-            <div class="col">
-                <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
-
-                <div class="row">
-                        <div class="col">
-                            @if (User.IsInRole("Moderator") || answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
-                            {
-                                <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
-                                @if (answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
-                                {
-                                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
-                                }
-                            }
-                        </div>
-                </div>
-
-                <hr/>
-                <div class="jumbotron">
-                    @Html.Raw(@answer.Text)
-                </div>
-                <div class="row">
-                        <div class="col"></div>
-                        <div class="col-4">
-                            <small class="text-muted">Answered @Util.TimeAgo(@answer.CreationDate)</small>
-                            <div class="text-muted small">
-                                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId"> <img src="@answer.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
-                                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId" class="ml-1">@answer.User.UserName</a>
+                            <div class="col-sm-2">
+                                <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id" class="text-primary">@comment.User.UserName</a>
+                                <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                             </div>
                         </div>
-                </div>
-
-            <div class="comments">
-                <hr/>
-                @foreach (var comment in answer.Comments) 
-                {
-                    <div class="row">
-                        <div class="col-8 mx-5" style="word-wrap: break-word;">
-                            @Html.Raw(@comment.Text)
-                        </div>
-                        <div class="col-sm-2">
-                            <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@comment.UserId" class="text-primary">@comment.User.UserName</a>
-                            <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
-                        </div>
                     </div>
-                    <hr/>
                 }
-                </div>
-                    <a class="btn btn-primary btn-block" asp-action="CommentForAns" asp-route-Id="@answer.Id">Comment</a>
-                </div>
             </div>
+            <a class="btn btn-primary btn-block" asp-action="Comment" asp-route-Id="@Model.Id">Comment</a>
 
+            </div>
+        </div>
     </div>
-<hr/>
-}
-</div>
 
-<!-- Your Answer -->
+    <div class="m-5">
+        <h1>
+            @Model.Answers.Count()
+            @if (@Model.Answers.Count() != 1) {
+                <span> Answers </span>
+            } else {
+                <span> Answer </span>
+            }
+        </h1>
+    </div>
+    <hr/>
+    <!-- Answers -->
+    <div class="container">
+    @foreach (var answer in Model.Answers)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    <div class="btn-group-vertical">
+                        <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
+                        <br/>
+                        <div class="d-flex justify-content-center btn">
+                            <span class="font-weight-bold">@answer.Likes</span>
+                        </div>
+                        <br/>
+                        <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
+                    </div>
+                        <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
+                        @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("Moderator") || User.IsInRole("Admin")) && !Model.IsSolved)
+                        {
+                            <a class="btn" asp-action="MarkSolution" asp-route-Id="@answer.Id">
+                                <svg class="checkmark" width="50" height="50" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
+                            </a>
+                            <style>
+                                .checkmark {
+                                    fill: grey;
+                                }
+                            </style>
+                        }
+                        else if (Model.IsSolved && answer.IsSolution)
+                        {
+                            <a class="btn">
+                                <svg class="checkmark" width="50" height="50" viewBox="0 0 36 36"><path d="m6 14 8 8L30 6v8L14 30l-8-8v-8Z"></path></svg>
+                            </a>
+                            <style>
+                                .checkmark {
+                                    fill: green;
+                                }
+                            </style>
+                        }
+                </div>
+                <div class="col">
+                    <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
 
-<a class="btn btn-success d-flex justify-content-center" asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
+                    <div class="row">
+                            <div class="col">
+                                @if (User.IsInRole("Moderator") || answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                                {
+                                    <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
+                                    @if (answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
+                                    {
+                                        <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="DeleteAnswer" class="btn btn-danger float-right">Delete</a>
+                                    }
+                                }
+                            </div>
+                    </div>
 
+                    <hr/>
+                    <div class="jumbotron">
+                        @Html.Raw(@answer.Text)
+                    </div>
+                    <div class="row">
+                            <div class="col"></div>
+                            <div class="col-4">
+                                <small class="text-muted">Answered @Util.TimeAgo(@answer.CreationDate)</small>
+                                <div class="text-muted small">
+                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId"> <img src="@answer.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@answer.UserId" class="ml-1">@answer.User.UserName</a>
+                                </div>
+                            </div>
+                    </div>
+
+                <div class="comments">
+                    <hr/>
+                    @foreach (var comment in answer.Comments) 
+                    {
+                        <div class="my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
+                            <div class="row">
+                                <div class="col-8 mx-5" style="word-wrap: break-word;">
+                                    @Html.Raw(@comment.Text)
+                                </div>
+                                <div class="col-sm-2">
+                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@comment.UserId" class="text-primary">@comment.User.UserName</a>
+                                    <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    </div>
+                        <a class="btn btn-primary btn-block" asp-action="CommentForAns" asp-route-Id="@answer.Id">Comment</a>
+                    </div>
+                </div>
+
+        </div>
+    <hr/>
+    }
+    </div>
+
+    <a class="btn btn-lg btn-success d-flex justify-content-center" asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
+</body>
