@@ -28,8 +28,8 @@
             <div class="row mt-5">
                 <div class="col">
                     <a asp-controller="Account" asp-action="ShowLiked" asp-route-id="@Model.Id" class="btn btn-primary">Liked posts</a>
+                    <span class="btn btn-success"> Points: @Model.Points </span>
                 </div>
-                Points: @Model.Points
             </div>
 
         </div>
