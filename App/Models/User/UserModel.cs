@@ -10,6 +10,8 @@ namespace App.Models
         [Display(Name="Profile picture")]
         public string ProfilePicPath { get; set; }
 
+        public int Points { get; set; }
+
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

@@ -1,13 +1,13 @@
 using System;
+using App.Models;
+using App.Context;
 using System.Linq;
 using System.Threading.Tasks;
-using App.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using App.Context;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Controllers
 {
@@ -246,13 +246,19 @@ namespace App.Controllers
 
         // GET: Question/DeleteAnswer/id
         // ROUTE: id
-        [Authorize(Roles = "Admin, Moderator")]
+        [Authorize]
         public async Task<IActionResult> DeleteAnswerAsync(Guid id)
         {
             var answer = await _db.Answers.FindAsync(id);
             if (answer == null) return NotFound("Answer not found !");
             var question = await _db.Questions.FindAsync(answer.QuestionId);
             if (question == null) return NotFound("Question not found !");
+
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (!(await _userManager.IsInRoleAsync(answer.User, "Admin")
+                || await _userManager.IsInRoleAsync(answer.User, "Moderator")
+                || curUser.Id == answer.User.Id)) return Unauthorized();
+
 
             // Remove dep
             answer.Comments.Clear();
@@ -263,6 +269,7 @@ namespace App.Controllers
             {
                 question.IsSolved = false;
                 answer.IsSolution = false;
+                answer.User.Points--;
             }
 
             _db.Answers.Remove(answer);
@@ -282,6 +289,9 @@ namespace App.Controllers
 
             answer.IsSolution = true;
             question.IsSolved = true;
+
+            // A a point to the user
+            answer.User.Points++;
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Show", "Question", new { Id = question.Id } );
