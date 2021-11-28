@@ -21,5 +21,7 @@ namespace App.Models
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
+
+        public virtual string Type { get; set; } = "Post";
     }
 }

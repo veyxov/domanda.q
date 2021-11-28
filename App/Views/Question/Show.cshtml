@@ -80,7 +80,7 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <span class="text-primary">@comment.User.UserName</span>
+                        <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id" class="text-primary">@comment.User.UserName</a>
                         <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                     </div>
                 </div>

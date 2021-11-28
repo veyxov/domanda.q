@@ -24,6 +24,11 @@
                     <input asp-for="Email" class="form-control">
                 </div>
             </form>
+
+            <div>
+                <a asp-controller="Account" asp-action="ShowLiked" asp-route-id="@Model.Id" class="btn btn-primary">Liked posts</a>
+            </div>
+
         </div>
 
         <div class="col">

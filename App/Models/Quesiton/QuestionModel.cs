@@ -9,5 +9,6 @@ namespace App.Models
         public virtual ICollection<Tag> Tags { get; set; }
 
         public virtual bool IsSolved { get; set; } = false;
+        public override string Type { get; set; } = "Question";
     }
 }

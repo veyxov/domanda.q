@@ -14,5 +14,7 @@ namespace App.Models
         public bool IsSolution { get; set; } = false;
 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        public override string Type { get; set; } = "Answer";
     }
 }
