@@ -25,8 +25,11 @@
                 </div>
             </form>
 
-            <div>
-                <a asp-controller="Account" asp-action="ShowLiked" asp-route-id="@Model.Id" class="btn btn-primary">Liked posts</a>
+            <div class="row mt-5">
+                <div class="col">
+                    <a asp-controller="Account" asp-action="ShowLiked" asp-route-id="@Model.Id" class="btn btn-primary">Liked posts</a>
+                </div>
+                Points: @Model.Points
             </div>
 
         </div>
