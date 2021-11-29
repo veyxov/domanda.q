@@ -34,5 +34,12 @@ namespace App.Controllers
             var quesitons = await _db.Questions.Where(p => p.Likes < 0).OrderBy(p => p.Likes).ToListAsync();
             return View(quesitons);
         }
+
+        // GET: Moderator/ShowHated
+        public async Task<IActionResult> ShowReportedAsync()
+        {
+            var quesitons = await _db.Questions.Where(p => p.IsReported).ToListAsync();
+            return View(quesitons);
+        }
     }
 }

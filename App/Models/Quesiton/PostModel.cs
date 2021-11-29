@@ -23,5 +23,8 @@ namespace App.Models
         public virtual User User { get; set; }
 
         public virtual string Type { get; set; } = "Post";
+
+        public bool IsReported { get; set; } = false;
+        public string ReportText { get; set; } = "Not reported";
     }
 }

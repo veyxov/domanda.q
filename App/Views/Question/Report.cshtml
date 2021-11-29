@@ -1,0 +1,14 @@
+@model App.Models.Post
+<h1 class="text-center"> Report a post ! </h1>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
+<div class="container">
+    <form asp-action="Report" asp-controller="Question" asp-route-Id="@Model.Id" method="post">
+        <textarea asp-for="ReportText" class="form-control"> </textarea>
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger btn-block">Report !</button>
+        </div>
+    </form>
+</div>

@@ -1,10 +1,25 @@
 @model App.Models.Question;
 
+@using System.Text.RegularExpressions;
 @using Microsoft.AspNetCore.Identity
 @using App.Utils;
 @inject UserManager<User> UserManager
 
 <body class="bg-light">
+    <!-- Reports for moderators -->
+    @if (User.IsInRole("Moderator") && @Model.IsReported)
+    {
+            <div class="container my-3">
+                <div class="btn-block alert alert-danger widt">
+                    <h4 class="alert-heading">This question was reported !</h4>
+                    <hr/>
+                    @Html.Raw(@Model.ReportText)
+                    <div class="d-flex justify-content-end">
+                        <a class="btn btn-lg btn-success text-light" asp-action="SortOut" asp-route-Id="@Model.Id">Sort out</a>
+                    </div>
+                </div>
+            </div>
+    }
     <div class="container">
         @if (!ViewData.ModelState.IsValid)
         {
@@ -30,16 +45,26 @@
                 <div class="row">
                     <div class="col">
                         <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
+                        @if ( User.Identity.IsAuthenticated )
+                        {
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Report" class="btn btn-warning float-right m-1" data-toggle="tooltip" data-placement="top" title='@Regex.Replace(@Model.ReportText, @"<[^>]+>", "")'>
+                                <span class="d-none d-md-block">
+
+                                </span>
+                                <i class="fas fa-flag"></i>
+                            </a>
+                        }
+
                         @if (Model.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
                         {
-                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1">Edit</a>
-                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right m-1">Delete</a>
-                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right m-1">Add tags</a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1"><i class="fa fa-edit"></i></a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger float-right m-1"><i class="fas fa-trash-alt"></i></a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right m-1"><i class="fas fa-tag"></i> </a>
                         }
                         else if (User.IsInRole("Moderator"))
                         {
-                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right ml-2">Edit</a>
-                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right mr-2">Add tags</a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1"><i class="fa fa-edit"></i></a>
+                            <a asp-route-Id="@Model.Id" asp-controller="Tag" asp-action="AddTagToQuestion" class="btn btn-success float-right m-1"><i class="fas fa-tag"></i> </a>
                         }
                     </div>
                 </div>
@@ -60,7 +85,7 @@
                     @foreach (var tag in Model.Tags)
                     {
                         <span class="small">
-                            <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white mx-1 p-1">
+                            <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white mx-1 p-1"data-toggle="tooltip" data-placement="top" title='@Regex.Replace(@tag.Description ?? "", @"<[^>]+>", "")'>
                                 @tag.Name
                             </a>
                         </span>
