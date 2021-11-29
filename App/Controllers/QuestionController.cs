@@ -306,5 +306,55 @@ namespace App.Controllers
                     : _db.Questions.OrderByDescending(p => p.Answers.Count()).ToListAsync());
             return View(questions);
         }
+
+        // GET: Question/Report/id
+        //
+        [Authorize]
+        public async Task<IActionResult> ReportAsync(Guid id) {
+            var post = new Post();
+            // Check for both Questions and Answers
+            post = await _db.Questions.FindAsync(id);
+            if (post == null) {
+                post = await _db.Answers.FindAsync(id);
+                if (post == null) return NotFound($"Post not found with id: {id}");
+            }
+            
+            return View(post);
+        }
+
+        // POST: Question/Report/{id}
+        // ROUTE: id
+        // BODY: Comment
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ReportAsync(Guid id, Post post)
+        {
+            var curPost = new Post();
+            // Check for both Questions and Answers
+            curPost = await _db.Questions.FindAsync(id);
+            if (curPost == null) {
+                curPost = await _db.Answers.FindAsync(id);
+                if (curPost == null) return NotFound($"Post not found with id: {id}");
+            }
+            // Report
+            curPost.IsReported = true;
+            curPost.ReportText = post.ReportText;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Show", "Question", new { Id = id });
+        }
+        // GET: Question/SortOut
+        // ROUTE: id
+        [Authorize(Roles = "Admin, Moderator")]
+        public async Task<IActionResult> SortOutAsync(Guid id)
+        {
+            var post = await _db.Questions.FindAsync(id);
+            // Clear the report
+            post.IsReported = false;
+            post.ReportText = string.Empty;
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Show", "Question", new { Id = id });
+        }
     }
 }

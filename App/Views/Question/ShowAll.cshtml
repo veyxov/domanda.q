@@ -63,13 +63,13 @@
                                     <div class="tags">
                                     @foreach (var tag in question.Tags)
                                     {
-                                        <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white m-1 p-1">
+                                        <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white m-1 p-1"data-toggle="tooltip" data-placement="top" title='@Regex.Replace(@tag.Description ?? "", @"<[^>]+>", "")'>
                                             @tag.Name
                                         </a>
                                     }
                                     </div>
                                     <div class="col-4">
-                                        <h5 class="text-muted">Asked @Util.TimeAgo(@question.CreationDate)</h5>
+                                        <h5 class="text-muted d-none d-md-block">Asked @Util.TimeAgo(@question.CreationDate)</h5>
                                         <div class="text-muted small">
                                             <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@question.UserId"> <img src="@question.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
                                             <a class="ml-1">@question.User.UserName</a>

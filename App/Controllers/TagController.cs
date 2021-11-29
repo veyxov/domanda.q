@@ -87,6 +87,7 @@ namespace App.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ShowByTagAsync(string tagName)
         {
+            ViewBag.CurrentTag = tagName;
             var questions = await _db.Questions.Where(p => p.Tags.Any(t => t.Name == tagName)).ToListAsync();
             return View(questions);
         }
