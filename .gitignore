@@ -5,8 +5,6 @@
 
 #MY
 Migrations/
-app.db*
-App/wwwroot/data/images
 
 # User-specific files
 *.rsuser
