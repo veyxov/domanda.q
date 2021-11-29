@@ -11,7 +11,7 @@
             <div asp-validation-summary="All" class="alert alert-danger"></div>
         }
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-2">
                 <div class="btn-group-vertical">
                 <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
                 <br/>
@@ -205,3 +205,11 @@
 
     <a class="btn btn-lg btn-success d-flex justify-content-center" asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
 </body>
+
+<!-- Normalize images -->
+<style>
+img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
