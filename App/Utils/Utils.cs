@@ -4,14 +4,14 @@ namespace App.Utils
 {
     public static class Util
     {
-        public static string TimeAgo(DateTime yourDate) {
+        public static string TimeAgo(DateTime date) {
             const int SECOND = 1;
             const int MINUTE = 60 * SECOND;
             const int HOUR = 60 * MINUTE;
             const int DAY = 24 * HOUR;
             const int MONTH = 30 * DAY;
 
-            var ts = new TimeSpan(DateTime.UtcNow.Ticks - yourDate.Ticks);
+            var ts = new TimeSpan(DateTime.UtcNow.Ticks - date.Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 1 * MINUTE)

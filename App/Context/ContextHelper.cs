@@ -50,7 +50,8 @@ namespace App.Data
                     {
                         UserName = "admin",
                         Email = adminUserEmail,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        ProfilePicPath = "/data/images/admin.jpg"
                     };
                     await userManager.CreateAsync(newAdminUser, "Qwerty112!");
                     await userManager.AddToRoleAsync(newAdminUser, "Admin");
@@ -64,7 +65,8 @@ namespace App.Data
                     {
                         UserName = "moderator",
                         Email = moderatorEmail,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        ProfilePicPath = "/data/images/moderator.png"
                     };
                     await userManager.CreateAsync(newModeratorUser, "Qwerty112!");
                     await userManager.AddToRoleAsync(newModeratorUser, "Moderator");
@@ -80,7 +82,9 @@ namespace App.Data
                     {
                         UserName = "user",
                         Email = appUserEmail,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+
+                        ProfilePicPath = "/data/images/user.png"
                     };
                     await userManager.CreateAsync(newAppUser, "Qwerty112!");
                     await userManager.AddToRoleAsync(newAppUser, "User");
