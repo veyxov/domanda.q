@@ -1,17 +1,25 @@
 @model App.Models.Tag
-@if (!ViewData.ModelState.IsValid)
-{
-    <div asp-validation-summary="All" class="alert alert-danger"></div>
-}
- 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <h1><label for="Name">Tag Name</label></h1>
-        <input asp-for="Name" name="name" class="form-inline form-control-lg" />
+<body class="bg-light">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+    }
+     
+    <h1>Create new tag</h1>
+    <hr/>
+    <div class="my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
+        <div class="d-flex justify-content-center">
+            <form asp-action="Create" method="post">
+                <div class="form-group">
+                    <h1><label for="Name">Name</label></h1>
+                    <input asp-for="Name" name="name" class="form-inline form-control-lg" />
+                </div>
+                <div class="form-group">
+                    <h1><label for="Description">Description</label></h1>
+                    <input asp-for="Description" class="form-inline form-control-lg" />
+                </div>
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Add new tag</button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <h1><label for="Description">Tag Description</label></h1>
-        <input asp-for="Description" class="form-inline form-control-lg" />
-    </div>
-    <button type="submit" class="btn btn-primary">Add new tag</button>
-</form>
+</body>
