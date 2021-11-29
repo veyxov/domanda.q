@@ -12,21 +12,24 @@
         }
         <div class="row">
             <div class="col-2">
-                <div class="btn-group-vertical">
-                <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
-                <br/>
-                <div class="d-flex justify-content-center btn">
-                    <span class="font-weight-bold">@Model.Likes</span>
+                <div class="likecontrols">
+                    <div class="btn-group-vertical">
+                    <a asp-controller="Like" asp-action="Increment" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
+                    <br/>
+                    <div class="d-flex justify-content-center btn">
+                        <span class="font-weight-bold">@Model.Likes</span>
+                    </div>
+                    <br/>
+                    <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
                 </div>
-                <br/>
-                <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@Model.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
 
                 </div>
             </div>
-            <div class="col">
+            <div class="col-10">
                 <h1> @Html.Raw(@Model.Heading) </h1>
                 <div class="row">
                     <div class="col">
+                        <span class="text-truncate text-muted">Asked @Util.TimeAgo(@Model.CreationDate)</span>
                         @if (Model.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
                         {
                             <a asp-route-Id="@Model.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info float-right m-1">Edit</a>
@@ -41,11 +44,9 @@
                     </div>
                 </div>
                 <hr/>
-                <div class="jumbotron" style="word-wrap: break-word; max-width: 55rem;" >
+                <div class="jumbotron p-3" style="word-wrap: break-word; max-width: 55rem;" >
                     @Html.Raw(@Model.Text)
                 </div>
-
-            <!-- Comments -->
 
             <div class="row">
                 <div class="col"> </div>
@@ -71,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="container-fluid">
+            <div class="comments">
                 <hr/>
                 @foreach (var comment in Model.Comments) 
                 {
@@ -108,20 +109,20 @@
     <hr/>
     <!-- Answers -->
     <div class="container">
-    @foreach (var answer in Model.Answers)
-    {
-        <div class="container">
+        @foreach (var answer in Model.Answers)
+        {
             <div class="row">
                 <div class="col-2">
-                    <div class="btn-group-vertical">
-                        <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
-                        <br/>
-                        <div class="d-flex justify-content-center btn">
-                            <span class="font-weight-bold">@answer.Likes</span>
+                    <div class="likecontrols">
+                        <div class="btn-group-vertical">
+                            <a asp-controller="Like" asp-action="Increment" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 26h32L18 10 2 26Z"></path></svg></a>
+                            <br/>
+                            <div class="d-flex justify-content-center btn">
+                                <span class="font-weight-bold">@answer.Likes</span>
+                            </div>
+                            <br/>
+                            <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
                         </div>
-                        <br/>
-                        <a asp-controller="Like" asp-action="Decrement" asp-route-Id="@answer.Id" class="btn"><svg width="50" height="50" viewBox="0 0 36 36" fill="grey"><path d="M2 10h32L18 26 2 10Z"></path></svg></a>
-                    </div>
                         <!-- TODO: REMOVE ISSOLVED CHECK FROM HERE TO THE CONTROLLER --> 
                         @if ((Model.User.UserName == User.Identity.Name || User.IsInRole("Moderator") || User.IsInRole("Admin")) && !Model.IsSolved)
                         {
@@ -145,12 +146,14 @@
                                 }
                             </style>
                         }
+                    </div>
                 </div>
-                <div class="col">
+                <div class="col-10">
                     <h1 style="word-wrap: break-word"> @Html.Raw(@answer.Heading) </h1>
 
                     <div class="row">
                             <div class="col">
+                            <span class="text-truncate text-muted">Answered @Util.TimeAgo(@answer.CreationDate)</span>
                                 @if (User.IsInRole("Moderator") || answer.User.UserName == User.Identity.Name || User.IsInRole("Admin"))
                                 {
                                     <a asp-route-Id="@answer.Id" asp-controller="Question" asp-action="EditAnswer" class="btn btn-info float-right ml-2">Edit</a>
@@ -163,7 +166,7 @@
                     </div>
 
                     <hr/>
-                    <div class="jumbotron">
+                    <div class="jumbotron p-3">
                         @Html.Raw(@answer.Text)
                     </div>
                     <div class="row">
@@ -183,11 +186,12 @@
                     {
                         <div class="my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
                             <div class="row">
-                                <div class="col-8 mx-5" style="word-wrap: break-word;">
+                                <div class="col-8" style="word-wrap: break-word;">
                                     @Html.Raw(@comment.Text)
                                 </div>
+
                                 <div class="col-sm-2">
-                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@comment.UserId" class="text-primary">@comment.User.UserName</a>
+                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@Model.User.Id" class="text-primary">@comment.User.UserName</a>
                                     <span class="d-inline-block text-truncate text-muted">@Util.TimeAgo(@comment.CreationDate)</span>
                                 </div>
                             </div>
@@ -197,10 +201,8 @@
                         <a class="btn btn-primary btn-block" asp-action="CommentForAns" asp-route-Id="@answer.Id">Comment</a>
                     </div>
                 </div>
-
-        </div>
-    <hr/>
-    }
+        <hr/>
+        }
     </div>
 
     <a class="btn btn-lg btn-success d-flex justify-content-center" asp-controller="Question" asp-action="Answer" asp-route-Id="@Model.Id"> Answer ! </a>
