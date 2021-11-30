@@ -8,54 +8,47 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<body class="bg-light">
+    <h1>Liked posts</h1>
 
-<!--Sort method-->
-
-<div class="d-flex justify-content-end">
-    <div class="btn-group float-right" role="group" aria-label="Basic example">
-      <a class="btn btn-outline-secondary">Sorted by most negative votes</a>
-    </div>
-</div>
-
-@foreach (var question in Model)
-{
-    <hr/>
-        <div class="container">
-            <div class="row">
-                    <div class="col-2">
-                        <div class="row">
-                            <div class="col">
-                                @if (question.Type == "Question")
-                                {
-                                    <span class="btn btn-outline-success">Question</span>
-                                }
-                                else
-                                {
-                                    <span class="btn btn-outline-warning">Answer</span>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id"> @Html.Raw(@question.Heading) </a>
-                        <br/>
-                    </div>
-                    <!--Edit ans Delete -->
+    @foreach (var question in Model)
+    {
+            <div class="container">
+                <div class="row my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
                         <div class="col-2">
-                            <div class="btn-group-vertical justify-content-center">
-                                <!-- Admin Can delete and edit; Moderator can only edit -->
-                                @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
-                                {
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger">Delete <i class="fas fa-trash"></i></a>
-                                }
-                                else if (User.IsInRole("Moderator"))
-                                {
-                                    <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
-                                }
+                            <div class="row">
+                                <div class="col">
+                                    @if (question.Type == "Question")
+                                    {
+                                        <span class="btn btn-outline-success">Question</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-outline-warning">Answer</span>
+                                    }
+                                </div>
                             </div>
                         </div>
+                        <div class="col">
+                            <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id"> @Html.Raw(@question.Heading) </a>
+                            <br/>
+                        </div>
+                        <!--Edit ans Delete -->
+                            <div class="col-2">
+                                <div class="btn-group-vertical justify-content-center">
+                                    <!-- Admin Can delete and edit; Moderator can only edit -->
+                                    @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
+                                    {
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger">Delete <i class="fas fa-trash"></i></a>
+                                    }
+                                    else if (User.IsInRole("Moderator"))
+                                    {
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info">Edit <i class="fas fa-edit"></i></a>
+                                    }
+                                </div>
+                            </div>
+                </div>
             </div>
-        </div>
-    <hr/>
-}
+    }
+</body>

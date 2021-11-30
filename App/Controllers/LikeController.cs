@@ -27,8 +27,10 @@ namespace App.Controllers
         [NonAction]
         public async Task<IActionResult> Change(Guid id, int val)
         {
-            var curUser = await _userManager.GetUserAsync(HttpContext.User);
+            // TODO: Remove this
+            if (Math.Abs(val) != 1) return BadRequest("Value can only be 1");
 
+            var curUser = await _userManager.GetUserAsync(HttpContext.User);
             // If you already like this post
             if (_db.LikedPosts.Any(p => p.PostId == id && p.UserId == curUser.Id)) {
                 _logger.Log(LogLevel.Critical, "You already liked/disliked this post");
@@ -60,10 +62,13 @@ namespace App.Controllers
                 return RedirectToAction("Show", "Question", new { Id = id });
             }
         }
+        
         // GET: Like/Increment
+        // Route: QuestionOrAnswerId, increment value
         public async Task<IActionResult> IncrementAsync(Guid id, int val) => await Change(id, 1);
 
         // GET: Like/Decrement
+        // Route: QuestionOrAnswerId, increment value
         public async Task<IActionResult> DecrementAsync(Guid id, int val) => await Change(id, -1);
     }
 }

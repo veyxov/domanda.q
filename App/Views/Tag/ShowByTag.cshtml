@@ -14,74 +14,75 @@
 <!--Sort method-->
 <h1> Questions tagged [@ViewBag.CurrentTag] </h1>
 </hr>
-
 @foreach (var question in Model)
 {
-    <hr/>
-        <div class="container">
-            <div class="row">
-                    <div class="col-2">
-                        <div class="col btn btn-outline-warning m-2 p-3">
-                            <span class="">@question.Likes</span>
-                            <span class="d-none d-md-block">Votes</span>
-                        </div>
-                        @if (@question.IsSolved)
-                        {
-                            <div class="col btn btn-success m-2 p-3">
-                                <span>@question.Answers.Count()</span>
-                                <span class="d-none d-md-block"> Answers </span>
+        <div class="my-3 p-3 bg-white rounded box-shadow border-bottom border-gray">
+                <div class="container">
+                    <div class="row ">
+                            <div class="col-2">
+                                <div class="col btn btn-outline-warning m-2 p-3">
+                                    <span class="">@question.Likes</span>
+                                    <span class="d-none d-md-block">Votes</span>
+                                </div>
+                                @if (@question.IsSolved)
+                                {
+                                    <div class="col btn btn-success m-2 p-3">
+                                        <span>@question.Answers.Count()</span>
+                                        <span class="d-none d-md-block"> Answers </span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col btn btn-outline-success m-2 p-3">
+                                        <span>@question.Answers.Count()</span>
+                                        <span class="d-none d-md-block"> Answers </span>
+                                    </div>
+                                }
                             </div>
-                        }
-                        else
-                        {
-                            <div class="col btn btn-outline-success m-2 p-3">
-                                <span>@question.Answers.Count()</span>
-                                <span class="d-none d-md-block"> Answers </span>
-                            </div>
-                        }
-                    </div>
-                    <div class="col">
-                        <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id">@Html.Raw(@question.Heading)</a>
-                        <div class="row">
                             <div class="col">
-                                <small class="text-muted">
-                                    @Regex.Replace(question.Text, @"<[^>]+>", "")
-                                </small>
-                            </div>
+                                <a class="lead" asp-controller="Question" asp-action="Show" asp-route-Id="@question.Id">@Html.Raw(@question.Heading)</a>
+                                <div class="row">
+                                    <div class="col">
+                                        <small class="text-muted" style="word-break: break-word;">
+                                            @Regex.Replace(question.Text, @"<[^>]+>", "")
+                                        </small>
+                                    </div>
 
-                            <div class="col-4">
-                                <h5 class="text-muted">Asked @Util.TimeAgo(@question.CreationDate)</h5>
-                                <div class="text-muted small">
-                                    <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@question.UserId"> <img src="@question.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
-                                    <a class="ml-1">@question.User.UserName</a>
+                                </div>
+                                <div class="row m-2 small d-fle justify-content-between">
+                                    <div class="tags">
+                                    @foreach (var tag in question.Tags)
+                                    {
+                                        <a asp-controller="Tag" asp-action="ShowByTag" asp-route-tagName="@tag.Name" class="btn border border-primary rounded bg-primary text-white m-1 p-1"data-toggle="tooltip" data-placement="top" title='@Regex.Replace(@tag.Description ?? "", @"<[^>]+>", "")'>
+                                            @tag.Name
+                                        </a>
+                                    }
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="text-muted d-none d-md-block">Asked @Util.TimeAgo(@question.CreationDate)</h5>
+                                        <div class="text-muted small">
+                                            <a asp-controller="Account" asp-action="ShowProfile" asp-route-Id="@question.UserId"> <img src="@question.User.ProfilePicPath"; class="img-fit img-responsive img-rounded img-thumbnail" style="max-height: 55px; max-width: 55px;"> </a>
+                                            <a class="ml-1">@question.User.UserName</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row m-2 small">
-                            @foreach (var tag in question.Tags)
-                            {
-                                <a asp-controller="Tag" asp-action="Index" class="btn border border-primary rounded bg-primary text-white m-1 p-1">
-                                    @tag.Name
-                                </a>
-                            }
-                        </div>
+                            <!--Edit ans Delete -->
+                           <div class="col-2">
+                                <div class="btn-group-vertical d-flex justify-content-end">
+                                    <!-- Admin Can delete and edit; Moderator can only edit -->
+                                    @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
+                                    {
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger"><span class="d-none d-md-block">Delete</span><i class="fas fa-trash"></i></a>
+                                    }
+                                    else if (User.IsInRole("Moderator"))
+                                    {
+                                        <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
+                                    }
+                                </div>
+                            </div>
                     </div>
-                    <!--Edit ans Delete -->
-                    <div class="col-2">
-                        <div class="btn-group-vertical justify-content-center">
-                            <!-- Admin Can delete and edit; Moderator can only edit -->
-                            @if ( User.Identity.IsAuthenticated && (question.User.UserName == User.Identity.Name || User.IsInRole("Admin")) )
-                            {
-                                <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
-                                <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Delete" class="btn btn-danger"><span class="d-none d-md-block">Delete</span><i class="fas fa-trash"></i></a>
-                            }
-                            else if (User.IsInRole("Moderator"))
-                            {
-                                <a asp-route-Id="@question.Id" asp-controller="Question" asp-action="Edit" class="btn btn-info"><span class="d-none d-md-block">Edit</span><i class="fas fa-edit"></i></a>
-                            }
-                        </div>
-                    </div>
-            </div>
-            <hr/>
+                </div>
         </div>
 }
